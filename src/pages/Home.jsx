@@ -124,13 +124,11 @@ export default function Home() {
                   <ArrowRight size={18} />
                 </a>
                 <a
-                  href={`https://wa.me/91${agencyInfo.whatsapp}?text=Hi%20Digital%20Ads%20World,%20I'm%20interested%20in%20a%20free%20consultation.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#services-section"
                   className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-8 py-4 rounded-2xl flex items-center justify-center gap-2 transition-all duration-300 text-base backdrop-blur-md"
                 >
-                  <MessageCircle size={18} className="text-[#25D366]" />
-                  <span>Chat On WhatsApp</span>
+                  <LucideIcons.Briefcase size={18} />
+                  <span>View All Services</span>
                 </a>
               </div>
 
@@ -351,7 +349,7 @@ export default function Home() {
       </section>
 
       {/* 4. SERVICE HIGHLIGHTS */}
-      <section className="py-20 bg-slate-50">
+      <section id="services-section" className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="text-xs font-black tracking-widest text-primary-blue uppercase">
             Our Services
