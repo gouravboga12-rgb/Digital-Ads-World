@@ -782,9 +782,14 @@ export default function Home() {
                   </div>
                   <div>
                     <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Agency Office</span>
-                    <span className="block font-bold text-premium-black text-sm sm:text-base mt-0.5">
+                    <a 
+                      href={agencyInfo.googleMapsBusinessUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block font-bold text-premium-black hover:text-primary-blue transition-colors text-sm sm:text-base mt-0.5"
+                    >
                       {agencyInfo.address}
-                    </span>
+                    </a>
                   </div>
                 </div>
               </div>
