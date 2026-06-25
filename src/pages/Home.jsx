@@ -8,8 +8,9 @@ import {
 import * as LucideIcons from 'lucide-react';
 import { 
   agencyInfo, services, testimonials, 
-  caseStudies, faqs 
+  caseStudies, faqs, gallery, team 
 } from '../data/siteContent';
+import Lightbox from '../components/Lightbox';
 import profitableConversionsImg from '../assets/profitable_conversions.png';
 import heroBg from '../assets/hero_bg.png';
 
@@ -33,6 +34,21 @@ export default function Home() {
       return <IconComponent className={className} />;
     }
     return <LucideIcons.HelpCircle className={className} />;
+  };
+
+  const [activeGalleryFilter, setActiveGalleryFilter] = useState('all');
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+
+  const filteredGalleryItems = activeGalleryFilter === 'all' 
+    ? gallery 
+    : gallery.filter(item => item.category === activeGalleryFilter);
+
+  const handlePrevGalleryItem = () => {
+    setLightboxIndex((prev) => (prev === 0 ? filteredGalleryItems.length - 1 : prev - 1));
+  };
+
+  const handleNextGalleryItem = () => {
+    setLightboxIndex((prev) => (prev === filteredGalleryItems.length - 1 ? 0 : prev + 1));
   };
 
   // Auto scroll testimonials
@@ -141,8 +157,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. COMPANY INTRODUCTION */}
-      <section className="py-20 bg-slate-50">
+      {/* 2. COMPANY INTRODUCTION / ABOUT US */}
+      <section className="py-20 bg-slate-50 border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
@@ -162,7 +178,7 @@ export default function Home() {
 
             <div className="lg:col-span-7 flex flex-col gap-6 text-left" data-aos="fade-left">
               <span className="text-xs font-black tracking-widest text-primary-blue uppercase">
-                Who We Are
+                Who We Are & Philosophy
               </span>
               <h2 className="text-3xl md:text-4xl font-black tracking-tight text-premium-black font-heading">
                 We Build Highly Profitable Conversions, Not Just Brand Awareness.
@@ -170,83 +186,166 @@ export default function Home() {
               <p className="text-slate-600 leading-relaxed font-light">
                 Digital Ads World is a modern performance marketing partner designed for businesses that expect quantifiable business results. We understand that vanity metrics like impressions and clicks don't pay the bills. That is why we structure every element of our campaign—from landing page speed to copy angles—specifically to convert high-intent prospects into paying clients.
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex gap-3">
-                  <div className="w-6 h-6 rounded-full bg-blue-50 text-primary-blue flex items-center justify-center shrink-0 mt-1">
-                    <CheckCircle size={14} />
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                {['Custom optimization cycles', 'Dedicated account managers', 'Daily budget checks', 'ROI matching models'].map((text, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <CheckCircle size={16} className="text-primary-blue shrink-0" />
+                    <span className="text-sm font-semibold text-slate-700">{text}</span>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-premium-black text-sm">Enterprise Data Analytics</h4>
-                    <p className="text-xs text-slate-500 mt-0.5">We route, attribute and track every conversion accurately.</p>
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <div className="w-6 h-6 rounded-full bg-blue-50 text-primary-blue flex items-center justify-center shrink-0 mt-1">
-                    <CheckCircle size={14} />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-premium-black text-sm">Custom Landing Pages</h4>
-                    <p className="text-xs text-slate-500 mt-0.5">Custom, high-speed UX designed to maximize client acquisition rates.</p>
-                  </div>
-                </div>
+                ))}
               </div>
-              <Link
-                to="/about"
-                className="text-primary-blue hover:text-blue-700 font-bold text-sm flex items-center gap-2 mt-4 hover:underline"
-              >
-                <span>Read Our Journey</span>
-                <ArrowRight size={14} />
-              </Link>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* 3. WHY CHOOSE US */}
-      <section className="py-20 bg-white border-b border-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-xs font-black tracking-widest text-primary-blue uppercase">
-            Why Choose Us
-          </span>
-          <h2 className="text-3xl md:text-4xl font-black mt-3 mb-4 tracking-tight text-premium-black font-heading">
-            Built For Growth-Focused Businesses
-          </h2>
-          <p className="text-slate-500 max-w-xl mx-auto mb-16 text-sm sm:text-base font-light">
-            We align our goals directly with your revenue sheet. Here is why international and regional brands partner with us.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Reason 1 */}
-            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100 flex flex-col gap-5 text-left premium-shadow-hover" data-aos="fade-up" data-aos-delay="100">
-              <div className="w-12 h-12 bg-blue-50 text-primary-blue rounded-2xl flex items-center justify-center">
+      {/* 3. MISSION, VISION & CORE VALUES */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20 text-left">
+            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100" data-aos="fade-right">
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center mb-6">
                 <Target size={24} />
               </div>
-              <h3 className="text-lg font-bold text-premium-black font-heading">Laser-Targeted Strategies</h3>
+              <h3 className="text-xl font-bold text-premium-black font-heading mb-3">Our Mission</h3>
               <p className="text-slate-500 text-sm leading-relaxed font-light">
-                No spray-and-pray techniques. We deep-dive into buyer persona intent, building campaigns that match correct demographic buying cycles.
+                To construct scalable customer acquisition channels that transform marketing budgets into transparent, compounding sales pipelines. We resolve to elevate industry benchmarks through data-driven campaigns.
               </p>
             </div>
-            {/* Reason 2 */}
-            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100 flex flex-col gap-5 text-left premium-shadow-hover" data-aos="fade-up" data-aos-delay="200">
-              <div className="w-12 h-12 bg-blue-50 text-primary-blue rounded-2xl flex items-center justify-center">
-                <Award size={24} />
+            
+            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100" data-aos="fade-left">
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center mb-6">
+                <TrendingUp size={24} />
               </div>
-              <h3 className="text-lg font-bold text-premium-black font-heading">Expertise & Execution</h3>
+              <h3 className="text-xl font-bold text-premium-black font-heading mb-3">Our Vision</h3>
               <p className="text-slate-500 text-sm leading-relaxed font-light">
-                We handle your budget as our own, overseen by qualified media buyers with years of performance experience and certified specializations.
+                To be recognized as the premier global standard for ROI-centric performance marketing, helping over 1,000 businesses break past digital plateaus using specialized funnel designs.
               </p>
             </div>
-            {/* Reason 3 */}
-            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100 flex flex-col gap-5 text-left premium-shadow-hover" data-aos="fade-up" data-aos-delay="300">
-              <div className="w-12 h-12 bg-blue-50 text-primary-blue rounded-2xl flex items-center justify-center">
-                <Trophy size={24} />
+          </div>
+
+          <div className="text-center mb-16">
+            <span className="text-xs font-black tracking-widest text-primary-blue uppercase">Our Values</span>
+            <h2 className="text-3xl font-black mt-3 text-premium-black font-heading font-heading font-heading">What We Stand For</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-left">
+            {[
+              {
+                title: "Absolute ROI Focus",
+                description: "We align all marketing strategies with actual sales revenue and cashflow, rather than clicks or branding impressions.",
+                icon: Target
+              },
+              {
+                title: "Data Transparency",
+                description: "No hidden spreadsheets. Our partners see live conversion data routed directly from platforms like Google Ads and Meta Pixel.",
+                icon: BarChart3
+              },
+              {
+                title: "High Integrity",
+                description: "We are selective about partnerships. If we believe a product is not ready to scale, we state it transparently.",
+                icon: ShieldCheck
+              },
+              {
+                title: "Creative Innovation",
+                description: "Dynamic ad creative styles are changed consistently to combat audience fatigue and reduce conversion prices.",
+                icon: Zap
+              }
+            ].map((value, i) => {
+              const IconComp = value.icon;
+              return (
+                <div key={i} className="flex flex-col gap-4 p-4" data-aos="fade-up" data-aos-delay={i * 50}>
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-primary-blue flex items-center justify-center">
+                    <IconComp size={20} />
+                  </div>
+                  <h4 className="text-base font-bold text-premium-black font-heading">{value.title}</h4>
+                  <p className="text-slate-500 text-xs sm:text-sm font-light leading-relaxed">{value.description}</p>
+                </div>
+              );
+            })}
+          </div>
+
+        </div>
+      </section>
+
+      {/* 3B. OUR FOUNDERS (TEAM) */}
+      <section className="py-20 bg-slate-50 border-y border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-xs font-black tracking-widest text-primary-blue uppercase">Leadership</span>
+            <h2 className="text-3xl md:text-4xl font-black mt-3 text-premium-black font-heading font-heading">
+              Our Founders & Team
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+            {team.map((member) => (
+              <div 
+                key={member.id} 
+                className="bg-white rounded-3xl p-8 border border-slate-200/50 flex flex-col md:flex-row gap-6 items-start text-left shadow-sm hover:shadow-lg transition-all"
+                data-aos="fade-up"
+              >
+                <img
+                  src={member.image_url}
+                  alt={member.name}
+                  className={`w-24 h-24 md:w-32 md:h-32 rounded-2xl object-cover shrink-0 border border-slate-100 ${member.objectPosition || 'object-center'}`}
+                />
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <h3 className="text-lg font-bold text-premium-black font-heading leading-tight">{member.name}</h3>
+                    <span className="text-xs font-bold text-primary-blue uppercase tracking-widest">{member.designation}</span>
+                  </div>
+                  <p className="text-slate-500 text-xs sm:text-sm font-light leading-relaxed">
+                    {member.bio}
+                  </p>
+                  
+                  {/* Social links preview */}
+                  <div className="flex items-center gap-3 mt-2 text-slate-400">
+                    {member.social_links.linkedin && (
+                      <a href={member.social_links.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary-blue text-xs font-bold">
+                        LinkedIn
+                      </a>
+                    )}
+                    {member.social_links.twitter && (
+                      <a href={member.social_links.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-primary-blue text-xs font-bold">
+                        Twitter
+                      </a>
+                    )}
+                  </div>
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-premium-black font-heading">Transparent Attributions</h3>
-              <p className="text-slate-500 text-sm leading-relaxed font-light">
-                Detailed reporting and live client dashboards. You see where every single click originated and exactly how many leads it closed.
-              </p>
-            </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3C. OUR JOURNEY TIMELINE */}
+      <section className="py-20 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-xs font-black tracking-widest text-primary-blue uppercase">Timeline</span>
+            <h2 className="text-3xl font-black mt-3 text-premium-black font-heading">Our Journey</h2>
+          </div>
+
+          <div className="relative border-l border-slate-200 ml-4 md:ml-32 md:mr-32 text-left">
+            {[
+              { year: "2023", title: "The Inception", desc: "Digital Ads World was founded in Hyderabad by K Charan with a single goal: driving performance-first results." },
+              { year: "2024", title: "Scaling Up", desc: "D Sri Ram joined to spearhead Digital Marketing, expanding ad management capacity by 300%." },
+              { year: "2025", title: "Global Client Base", desc: "Serviced over 50+ clients globally, managing over $2.4 Million in cumulative ad spend." },
+              { year: "2026", title: "Dynamic Lead Systems", desc: "Launched automated conversation funnels integrating client databases with immediate WhatsApp routing." }
+            ].map((item, index) => (
+              <div key={index} className="mb-12 ml-6 relative" data-aos="fade-up">
+                {/* Timeline dot */}
+                <div className="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-primary-blue border-4 border-white shadow-sm"></div>
+                
+                <span className="text-xs font-black text-primary-blue">{item.year}</span>
+                <h3 className="text-lg font-bold text-premium-black font-heading mt-1">{item.title}</h3>
+                <p className="text-slate-500 text-xs sm:text-sm font-light mt-1.5 leading-relaxed max-w-2xl">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -265,7 +364,7 @@ export default function Home() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 items-start">
-            {services.slice(0, 6).map((service, index) => (
+            {services.map((service, index) => (
               <div 
                 key={service.id} 
                 className="bg-white rounded-3xl overflow-hidden border border-slate-100 flex flex-col hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 text-left"
@@ -333,16 +432,6 @@ export default function Home() {
 
               </div>
             ))}
-          </div>
-
-          <div className="mt-12">
-            <Link
-              to="/services"
-              className="inline-flex items-center gap-2 bg-primary-blue hover:bg-blue-700 text-white font-bold px-8 py-3.5 rounded-2xl transition-all duration-300 shadow-lg shadow-blue-500/15 hover:-translate-y-0.5"
-            >
-              <span>Explore All 11 Services</span>
-              <LucideIcons.ArrowRight size={16} />
-            </Link>
           </div>
         </div>
       </section>
@@ -438,6 +527,98 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* 6B. GALLERY & PORTFOLIO */}
+      <section className="py-20 bg-white border-y border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="text-xs font-black tracking-widest text-primary-blue uppercase">
+              Portfolio
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-premium-black mt-3 font-heading">
+              Our Work & Results Gallery
+            </h2>
+            <p className="text-slate-500 max-w-xl mx-auto text-xs sm:text-sm mt-2 font-light">
+              Check out our realistic creative campaigns, graphic layout designs, and high-performance landing pages.
+            </p>
+          </div>
+
+          {/* Filters List */}
+          <div className="flex flex-wrap justify-center gap-2 mb-12" data-aos="fade-up">
+            {[
+              { label: 'All Projects', value: 'all' },
+              { label: 'Campaign Results', value: 'campaign' },
+              { label: 'Ad Creatives', value: 'creative' },
+              { label: 'Branding & Designs', value: 'branding' },
+              { label: 'Websites', value: 'website' },
+              { label: 'Video Projects', value: 'video' }
+            ].map((filter) => {
+              const isActive = activeGalleryFilter === filter.value;
+              return (
+                <button
+                  key={filter.value}
+                  onClick={() => {
+                    setActiveGalleryFilter(filter.value);
+                    setLightboxIndex(null);
+                  }}
+                  className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
+                    isActive 
+                      ? 'bg-primary-blue text-white shadow-lg shadow-blue-500/15' 
+                      : 'bg-slate-100 hover:bg-slate-200 text-dark-gray'
+                  }`}
+                >
+                  {filter.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Gallery Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredGalleryItems.map((item, index) => (
+              <div
+                key={item.id}
+                onClick={() => setLightboxIndex(index)}
+                className="group relative bg-slate-50 rounded-3xl overflow-hidden border border-slate-100 cursor-zoom-in shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 text-left"
+                data-aos="fade-up"
+                data-aos-delay={index * 50}
+              >
+                {/* Image Wrapper */}
+                <div className="relative aspect-[4/3] w-full overflow-hidden">
+                  <img
+                    src={item.image_url}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-white flex items-center justify-center shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                      <LucideIcons.Maximize2 size={20} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content Info */}
+                <div className="p-6 flex flex-col gap-2 bg-white">
+                  <div className="flex items-center gap-1.5 text-[10px] font-black text-primary-blue uppercase tracking-widest leading-none">
+                    <LucideIcons.Tag size={10} />
+                    <span>{item.category}</span>
+                  </div>
+                  <h3 className="text-base font-bold text-premium-black font-heading mt-1 line-clamp-1 leading-tight group-hover:text-primary-blue transition-colors">
+                    {item.title}
+                  </h3>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {filteredGalleryItems.length === 0 && (
+            <div className="text-center py-20 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+              <p className="text-slate-400 font-medium">No items found in this category.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -539,38 +720,95 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 9. LEAD CAPTURE FORM SECTION */}
+      {/* 9. LEAD CAPTURE & CONTACT DETAILS */}
       <section id="contact-section" className="py-20 bg-slate-50 border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             
-            <div className="lg:col-span-5 flex flex-col gap-6 text-left" data-aos="fade-right">
-              <span className="text-xs font-black tracking-widest text-primary-blue uppercase">
-                Let's Partner Up
-              </span>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-premium-black font-heading leading-tight">
-                Ready To Scale Your Sales & Leads?
-              </h2>
-              <p className="text-slate-500 font-light leading-relaxed">
-                Fill out the brief consultation details. Our team will review your website and current marketing campaigns, scheduling a free 30-minute growth call detailing exactly where your leakage points are.
-              </p>
+            {/* Left Column: Direct Contact Channels */}
+            <div className="lg:col-span-5 flex flex-col gap-8 text-left" data-aos="fade-right">
+              <div>
+                <span className="text-xs font-black text-primary-blue tracking-widest uppercase">Office Info</span>
+                <h2 className="text-2xl font-black text-premium-black font-heading mt-2">Get In Touch Directly</h2>
+                <p className="text-slate-500 text-sm mt-2 font-light">
+                  Have an active campaign that needs auditing? Reach out via call or message. We review requests within 4 hours.
+                </p>
+              </div>
 
-              <div className="space-y-4 pt-4 border-t border-slate-200/50">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-blue-50 text-primary-blue flex items-center justify-center shrink-0">
-                    <ShieldCheck size={18} />
+              {/* Channels List */}
+              <div className="flex flex-col gap-6">
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 bg-white border border-slate-200/50 rounded-xl text-primary-blue flex items-center justify-center shrink-0 shadow-sm">
+                    <LucideIcons.Phone size={18} />
                   </div>
-                  <span className="text-xs font-semibold text-slate-600">NDAs available for corporate brands.</span>
+                  <div>
+                    <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Phone Call</span>
+                    <a href={`tel:${agencyInfo.phone}`} className="block font-bold text-premium-black hover:text-primary-blue transition-colors text-sm sm:text-base mt-0.5">
+                      +91 {agencyInfo.phone}
+                    </a>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-blue-50 text-primary-blue flex items-center justify-center shrink-0">
-                    <Clock size={18} />
+
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 bg-white border border-slate-200/50 rounded-xl text-[#25D366] flex items-center justify-center shrink-0 shadow-sm">
+                    <LucideIcons.MessageCircle size={20} />
                   </div>
-                  <span className="text-xs font-semibold text-slate-600">Typical response time: Less than 4 hours.</span>
+                  <div>
+                    <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">WhatsApp chat</span>
+                    <a 
+                      href={`https://wa.me/91${agencyInfo.whatsapp}?text=Hi%20Digital%20Ads%20World,%20I'm%20interested%20in%20scaling%20my%20business.`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block font-bold text-premium-black hover:text-primary-blue transition-colors text-sm sm:text-base mt-0.5"
+                    >
+                      +91 {agencyInfo.whatsapp}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 bg-white border border-slate-200/50 rounded-xl text-primary-blue flex items-center justify-center shrink-0 shadow-sm">
+                    <LucideIcons.Mail size={18} />
+                  </div>
+                  <div>
+                    <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Email Address</span>
+                    <a href={`mailto:${agencyInfo.email}`} className="block font-bold text-premium-black hover:text-primary-blue transition-colors text-sm sm:text-base mt-0.5">
+                      {agencyInfo.email}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 bg-white border border-slate-200/50 rounded-xl text-primary-blue flex items-center justify-center shrink-0 shadow-sm">
+                    <LucideIcons.MapPin size={18} />
+                  </div>
+                  <div>
+                    <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Agency Office</span>
+                    <span className="block font-bold text-premium-black text-sm sm:text-base mt-0.5">
+                      {agencyInfo.address}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Social Channels */}
+              <div className="pt-6 border-t border-slate-200 flex items-center gap-4">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Follow Us:</span>
+                <div className="flex gap-3">
+                  <a href={agencyInfo.social.linkedin} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white border border-slate-200/50 hover:bg-primary-blue hover:text-white text-dark-gray transition-all duration-300 shadow-sm">
+                    <LucideIcons.Linkedin size={16} />
+                  </a>
+                  <a href={agencyInfo.social.instagram} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white border border-slate-200/50 hover:bg-primary-blue hover:text-white text-dark-gray transition-all duration-300 shadow-sm">
+                    <LucideIcons.Instagram size={16} />
+                  </a>
+                  <a href={agencyInfo.social.facebook} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white border border-slate-200/50 hover:bg-primary-blue hover:text-white text-dark-gray transition-all duration-300 shadow-sm">
+                    <LucideIcons.Facebook size={16} />
+                  </a>
                 </div>
               </div>
             </div>
 
+            {/* Right Column: Lead Form */}
             <div className="lg:col-span-7" data-aos="fade-left">
               <div className="bg-white p-8 md:p-10 rounded-3xl shadow-xl border border-slate-100 text-left">
                 {!submitted ? (
@@ -671,6 +909,19 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 9B. GOOGLE MAPS LOCATION INTEGRATION */}
+      <section className="w-full h-[450px] bg-slate-100 border-t border-slate-200">
+        <iframe
+          src={agencyInfo.googleMapsEmbedUrl}
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          allowFullScreen=""
+          loading="lazy"
+          title="Digital Ads World Office Location Map"
+        ></iframe>
+      </section>
+
       {/* 10. WHATSAPP CTA BANNER */}
       <section className="bg-primary-blue py-16 text-white relative">
         <div className="absolute top-0 right-0 w-[30vw] h-[30vw] bg-white/10 rounded-full blur-[80px] -z-10"></div>
@@ -695,6 +946,16 @@ export default function Home() {
           </a>
         </div>
       </section>
+
+      {/* Lightbox Preview Modal */}
+      {lightboxIndex !== null && (
+        <Lightbox
+          activeItem={filteredGalleryItems[lightboxIndex]}
+          onClose={() => setLightboxIndex(null)}
+          onPrev={handlePrevGalleryItem}
+          onNext={handleNextGalleryItem}
+        />
+      )}
 
     </div>
   );
