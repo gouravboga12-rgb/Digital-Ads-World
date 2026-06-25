@@ -121,13 +121,9 @@ export default function Contact() {
                 </div>
               </div>
 
-              {/* Social Channels */}
               <div className="pt-6 border-t border-slate-100 flex items-center gap-4">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Follow Us:</span>
                 <div className="flex gap-3">
-                  <a href={agencyInfo.social.linkedin} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-slate-50 hover:bg-primary-blue hover:text-white text-dark-gray transition-all duration-300">
-                    <Linkedin size={16} />
-                  </a>
                   <a href={agencyInfo.social.instagram} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-slate-50 hover:bg-primary-blue hover:text-white text-dark-gray transition-all duration-300">
                     <Instagram size={16} />
                   </a>

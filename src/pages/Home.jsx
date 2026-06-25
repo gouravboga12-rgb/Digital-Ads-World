@@ -299,20 +299,6 @@ export default function Home() {
                   <p className="text-slate-500 text-xs sm:text-sm font-light leading-relaxed">
                     {member.bio}
                   </p>
-                  
-                  {/* Social links preview */}
-                  <div className="flex items-center gap-3 mt-2 text-slate-400">
-                    {member.social_links.linkedin && (
-                      <a href={member.social_links.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary-blue text-xs font-bold">
-                        LinkedIn
-                      </a>
-                    )}
-                    {member.social_links.twitter && (
-                      <a href={member.social_links.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-primary-blue text-xs font-bold">
-                        Twitter
-                      </a>
-                    )}
-                  </div>
                 </div>
               </div>
             ))}
@@ -807,13 +793,9 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Social Channels */}
               <div className="pt-6 border-t border-slate-200 flex items-center gap-4">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Follow Us:</span>
                 <div className="flex gap-3">
-                  <a href={agencyInfo.social.linkedin} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white border border-slate-200/50 hover:bg-primary-blue hover:text-white text-dark-gray transition-all duration-300 shadow-sm">
-                    <LucideIcons.Linkedin size={16} />
-                  </a>
                   <a href={agencyInfo.social.instagram} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white border border-slate-200/50 hover:bg-primary-blue hover:text-white text-dark-gray transition-all duration-300 shadow-sm">
                     <LucideIcons.Instagram size={16} />
                   </a>

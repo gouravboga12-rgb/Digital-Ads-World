@@ -48,32 +48,6 @@ export default function Team() {
                   <p className="text-slate-500 text-xs font-light leading-relaxed mt-1 line-clamp-3">
                     {member.bio}
                   </p>
-                  
-                  {/* Socials */}
-                  <div className="flex items-center gap-3 mt-auto pt-4 border-t border-slate-100 text-slate-400">
-                    {member.social_links.linkedin && (
-                      <a 
-                        href={member.social_links.linkedin} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="hover:text-primary-blue transition-colors"
-                        aria-label={`${member.name} LinkedIn`}
-                      >
-                        <Linkedin size={15} />
-                      </a>
-                    )}
-                    {member.social_links.twitter && (
-                      <a 
-                        href={member.social_links.twitter} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="hover:text-primary-blue transition-colors"
-                        aria-label={`${member.name} Twitter`}
-                      >
-                        <Twitter size={15} />
-                      </a>
-                    )}
-                  </div>
                 </div>
               </div>
             ))}

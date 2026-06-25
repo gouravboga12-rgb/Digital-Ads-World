@@ -23,15 +23,6 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-3">
               <a
-                href={agencyInfo.social.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-primary-blue text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={16} />
-              </a>
-              <a
                 href={agencyInfo.social.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
