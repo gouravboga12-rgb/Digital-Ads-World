@@ -1,10 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Phone, Mail, MapPin, MessageCircle, Send, CheckCircle, Linkedin, Instagram, Facebook } from 'lucide-react';
 import { agencyInfo } from '../data/siteContent';
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', service: 'General Growth Consultation', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
+      const timer = setTimeout(() => {
+        const element = document.getElementById('contact-form-section');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -135,10 +151,13 @@ export default function Contact() {
             </div>
 
             {/* Right Column: Interactive Form */}
-            <div className="lg:col-span-7" data-aos="fade-left">
+            <div id="contact-form-section" className="lg:col-span-7" data-aos="fade-left">
               <div className="bg-slate-50 border border-slate-100 p-8 md:p-10 rounded-3xl text-left shadow-xl">
                 {!submitted ? (
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    <h3 className="text-xl font-black text-premium-black font-heading mb-6 block lg:hidden">
+                      Send Us a Message
+                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Your Name</label>

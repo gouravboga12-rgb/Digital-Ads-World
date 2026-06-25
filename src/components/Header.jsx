@@ -30,9 +30,18 @@ export default function Header() {
     { name: 'Contact Us', path: '/contact' }
   ];
 
-  const handleLinkClick = () => {
+  const handleNavigation = (path) => {
     setIsOpen(false);
-    window.scrollTo(0, 0);
+    if (path === '/contact' && window.innerWidth < 1024) {
+      setTimeout(() => {
+        const element = document.getElementById('contact-form-section');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
   };
 
   return (
@@ -56,7 +65,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo Section */}
-          <Link to="/" onClick={handleLinkClick} className="flex items-center group">
+          <Link to="/" onClick={() => handleNavigation('/')} className="flex items-center group">
             <img src={logo} alt="Digital Ads World" className="h-16 md:h-24 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
           </Link>
 
@@ -68,7 +77,7 @@ export default function Header() {
                 <Link
                   key={link.name}
                   to={link.path}
-                  onClick={() => window.scrollTo(0, 0)}
+                  onClick={() => handleNavigation(link.path)}
                   className={`relative text-sm font-semibold tracking-wide transition-colors duration-300 pb-1 ${
                     isActive ? 'text-primary-blue' : 'text-dark-gray hover:text-primary-blue'
                   }`}
@@ -123,7 +132,7 @@ export default function Header() {
                 <Link
                   key={link.name}
                   to={link.path}
-                  onClick={handleLinkClick}
+                  onClick={() => handleNavigation(link.path)}
                   className={`text-base font-bold px-4 py-2.5 rounded-xl transition-all ${
                     isActive 
                       ? 'bg-blue-50 text-primary-blue' 
