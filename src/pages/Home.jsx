@@ -362,7 +362,7 @@ export default function Home() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 items-start">
-            {services.map((service, index) => (
+            {services.slice(0, 3).map((service, index) => (
               <div 
                 key={service.id} 
                 className="bg-white rounded-3xl overflow-hidden border border-slate-100 flex flex-col hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 text-left"
@@ -431,6 +431,19 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+          {/* View All Services Link */}
+          <div className="mt-16 flex justify-center">
+            <Link
+              to="/services"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="bg-primary-blue hover:bg-blue-700 text-white font-bold px-8 py-4 rounded-2xl flex items-center justify-center gap-2 transition-all duration-300 shadow-xl shadow-blue-500/20 hover:-translate-y-0.5 text-base"
+            >
+              <span>View All Services</span>
+              <LucideIcons.ArrowRight size={18} />
+            </Link>
+          </div>
+
         </div>
       </section>
 
