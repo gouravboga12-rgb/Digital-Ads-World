@@ -34,100 +34,121 @@ export const agencyInfo = {
 export const services = [
   {
     id: "s1",
-    title: "Google Ads Management",
-    slug: "google-ads-management",
-    description: "We create and optimize Google Ads campaigns to generate quality leads, increase website traffic, and maximize ROI.",
-    image_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80",
+    title: "Google Ads",
+    slug: "google-ads",
+    description: "Search, Display, Shopping & YouTube campaigns engineered for maximum ROI — every rupee tracked and optimised.",
     benefits: [
       "Target ready-to-buy high intent leads",
       "Precision search, display, and video ads",
       "Continuous bidding & conversion optimization",
       "Comprehensive weekly & monthly reporting"
     ],
-    icon: "Search",
+    icon: "Google",
     order_index: 1
   },
   {
     id: "s2",
-    title: "Meta Ads Management",
-    slug: "meta-ads-management",
-    description: "We run Facebook and Instagram advertising campaigns focused on lead generation, sales, and brand awareness.",
-    image_url: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=600&q=80",
+    title: "Meta Ads",
+    slug: "meta-ads",
+    description: "Facebook & Instagram campaigns with precision audience targeting, creative testing, and conversion-focused funnels.",
     benefits: [
       "Hyper-targeted custom & lookalike audiences",
       "High-converting video & carousel creatives",
       "Full-funnel remarketing strategies",
       "A/B split testing for scaling campaigns"
     ],
-    icon: "Instagram",
+    icon: "Meta",
     order_index: 2
   },
   {
     id: "s3",
-    title: "Performance Marketing",
-    slug: "performance-marketing",
-    description: "Data-driven campaigns focused on measurable business growth, conversions, and profitability.",
-    image_url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
+    title: "Lead Generation",
+    slug: "lead-generation",
+    description: "Multi-channel lead gen strategies — landing pages, forms, and retargeting funnels that fill your sales pipeline consistently.",
     benefits: [
-      "CAC (Customer Acquisition Cost) optimization",
-      "Conversion Rate Optimization (CRO) audits",
-      "Cross-channel advertising funnels",
-      "Direct ROI and revenue attribution tracking"
+      "Custom sales funnel construction",
+      "Automated lead routing & SMS notifications",
+      "High CTR landing page development",
+      "A/B split testing of forms and offers"
     ],
-    icon: "TrendingUp",
+    icon: "UserPlus",
     order_index: 3
   },
   {
     id: "s4",
-    title: "Influencer Marketing",
-    slug: "influencer-marketing",
-    description: "Strategic influencer collaborations that improve brand awareness and customer acquisition.",
-    image_url: "https://images.unsplash.com/photo-1533750516457-a7f992034fec?auto=format&fit=crop&w=600&q=80",
+    title: "Online Reputation Management",
+    slug: "orm",
+    description: "Monitor, manage and improve your brand perception across Google, social media, and review platforms proactively.",
     benefits: [
-      "Authentic connections with vetted creators",
-      "Campaign strategy and negotiation",
-      "Multi-platform influencer campaigns",
-      "High engagement rates and organic reach"
+      "Review generation automation",
+      "Negative feedback moderation protocols",
+      "Search results cleanup & brand defense",
+      "24/7 brand mention monitoring dashboards"
     ],
-    icon: "Users",
+    icon: "Shield",
     order_index: 4
   },
   {
     id: "s5",
-    title: "Search Engine Optimization (SEO)",
+    title: "SEO",
     slug: "seo",
-    description: "On-page SEO, Off-page SEO, Technical SEO, Local SEO, and Keyword Optimization.",
-    image_url: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=600&q=80",
+    description: "Dominate Google rankings with technical SEO, content strategy, and authority link-building that compounds over time.",
     benefits: [
       "Dominant organic search engine rankings",
       "Optimized Google Business Profile for local map pack",
       "Technical audits and speed optimizations",
       "High-authority backlink building strategies"
     ],
-    icon: "Globe",
+    icon: "Search",
     order_index: 5
   },
   {
     id: "s6",
     title: "Social Media Marketing",
     slug: "social-media-marketing",
-    description: "Complete social media management, content creation, engagement, and growth strategies.",
-    image_url: socialMediaImg,
+    description: "Platform-native content, community management, and paid social that builds brand equity and drives sales.",
     benefits: [
       "Aesthetic grid layouts and content calendars",
       "Viral reels planning and copy writing",
       "Proactive user engagement and DM management",
       "Follower growth and brand building strategies"
     ],
-    icon: "MessageSquare",
+    icon: "Instagram",
     order_index: 6
   },
   {
     id: "s7",
-    title: "Website Development",
-    slug: "website-development",
-    description: "Responsive, SEO-friendly, high-converting websites and landing pages.",
-    image_url: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&w=600&q=80",
+    title: "PPC",
+    slug: "ppc",
+    description: "Google Ads & Meta campaigns optimised for maximum conversions at minimum cost — every rupee accountable.",
+    benefits: [
+      "Lowest cost per conversion optimization",
+      "Advanced search and programmatic ad buying",
+      "Daily budget checks & pacing audits",
+      "Attribution mapping and tracking setup"
+    ],
+    icon: "Monitor",
+    order_index: 7
+  },
+  {
+    id: "s8",
+    title: "Email & WhatsApp Marketing",
+    slug: "email-whatsapp-marketing",
+    description: "Automated drip campaigns, broadcast messaging, and personalised outreach that nurtures leads into loyal customers.",
+    benefits: [
+      "Automated sequences mapped to client actions",
+      "High open-rate WhatsApp broadcasts",
+      "Newsletter template design & copy writing",
+      "Subscriber list segmentation and cleanup"
+    ],
+    icon: "Mail",
+    order_index: 8
+  },
+  {
+    id: "s9",
+    title: "Website Design & Development",
+    slug: "website-design-development",
+    description: "High-converting, SEO-ready websites and landing pages engineered for speed, UX, and business outcomes.",
     benefits: [
       "Sleek and responsive custom designs",
       "Built for lightning-fast load times",
@@ -135,44 +156,41 @@ export const services = [
       "Highly secure, clean code with SEO standards"
     ],
     icon: "Code",
-    order_index: 7
-  },
-  {
-    id: "s8",
-    title: "Graphic Designing",
-    slug: "graphic-designing",
-    description: "Professional creatives, social media posts, brochures, flyers, banners, and brand assets.",
-    image_url: graphicDesignImg,
-    benefits: [
-      "Visually stunning corporate assets",
-      "High CTR social media & ad banners",
-      "Unified brand guidelines & styles",
-      "Ready-to-print flyers, brochures & card styles"
-    ],
-    icon: "Palette",
-    order_index: 8
-  },
-  {
-    id: "s9",
-    title: "Video Editing",
-    slug: "video-editing",
-    description: "Reels, ad videos, promotional videos, YouTube content, and professional editing services.",
-    image_url: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=600&q=80",
-    benefits: [
-      "High-retention hooks and text captions",
-      "Vibrant color grading & sound design",
-      "Optimized format for Shorts, Reels & TikToks",
-      "Commercial product ads and corporate editing"
-    ],
-    icon: "Video",
     order_index: 9
   },
   {
     id: "s10",
-    title: "Branding & Creative Design",
-    slug: "branding",
-    description: "Logo creation, brand strategy, visual identity, and premium marketing materials.",
-    image_url: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80",
+    title: "AI Tools",
+    slug: "ai-tools",
+    description: "AI-powered content generation, chatbots, ad creative automation, and predictive analytics to scale faster.",
+    benefits: [
+      "Custom conversational chatbots",
+      "AI-driven visual ad creative testing",
+      "Automated content drafting models",
+      "Predictive audience scaling analytics"
+    ],
+    icon: "Sparkles",
+    order_index: 10
+  },
+  {
+    id: "s11",
+    title: "Analytics & Reporting",
+    slug: "analytics-reporting",
+    description: "Real-time dashboards, monthly strategy reviews, and full attribution reporting — total clarity on every investment.",
+    benefits: [
+      "Interactive customized dashboards",
+      "Pixel and server-side API configurations",
+      "Deep-dive conversion analysis reviews",
+      "Weekly actionable optimization goals"
+    ],
+    icon: "BarChart3",
+    order_index: 11
+  },
+  {
+    id: "s12",
+    title: "Brand Building",
+    slug: "brand-building",
+    description: "From logo to full brand systems — we craft identities that communicate authority and convert first impressions.",
     benefits: [
       "Premium logo marks and visual systems",
       "Corporate presentation templates",
@@ -180,22 +198,7 @@ export const services = [
       "Stationery layouts & custom typography selection"
     ],
     icon: "Award",
-    order_index: 10
-  },
-  {
-    id: "s11",
-    title: "Analytics & Reporting",
-    slug: "analytics-reporting",
-    description: "Campaign tracking, conversion tracking, monthly reporting, and performance insights.",
-    image_url: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=600&q=80",
-    benefits: [
-      "Interactive customized dashboards",
-      "Pixel and server-side API configurations",
-      "Deep-dive conversion analysis reviews",
-      "Weekly actionable optimization goals"
-    ],
-    icon: "PieChart",
-    order_index: 11
+    order_index: 12
   }
 ];
 
@@ -203,7 +206,7 @@ export const team = [
   {
     id: "t-1",
     name: "K CHARAN",
-    designation: "FOUNDER AND CEO OF DIGITAL ADS WORLD",
+    designation: "FOUNDER AND CEO",
     bio: "Visionary leader driving performance-focused growth and strategic scaling initiatives for international and local clients. Charan works directly with clients to map growth strategies.",
     image_url: charanImg,
     social_links: { linkedin: "https://linkedin.com", twitter: "https://twitter.com", facebook: "" },
@@ -212,8 +215,8 @@ export const team = [
   },
   {
     id: "t-2",
-    name: "GUDALA SRI RAM",
-    designation: "DIGITAL MARKETING HEAD",
+    name: "G SRI RAM",
+    designation: "CO FOUNDER & DIGITAL MARKETING HEAD",
     bio: "Data-driven marketing master specializing in Meta and Google Ads ROI optimization, funnel architecture, and analytics. Sri Ram oversees campaign delivery and execution.",
     image_url: sriramImg,
     social_links: { linkedin: "https://linkedin.com", twitter: "", facebook: "" },
@@ -225,33 +228,75 @@ export const team = [
 export const testimonials = [
   {
     id: "test-1",
-    name: "Dr. Aditya Reddy",
-    designation: "Chief Orthodontist",
-    company: "Reddy Dental Clinic",
-    feedback: "Digital Ads World completely transformed our client acquisition. We went from 10 inquiries a month to over 150+ high-quality WhatsApp patient inquiries! Highly professional team.",
+    name: "Arvind Kumar",
+    designation: "CEO",
+    company: "TechVenture India • Hyderabad",
+    feedback: "Digital Ads World tripled our organic traffic in under 8 months. Their SEO team is incredibly thorough — from technical fixes to content that actually ranks. Best investment we've made in years.",
     rating: 5,
-    image_url: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=200&q=80",
+    date: "2 months ago",
+    initials: "AK",
+    bgColor: "bg-blue-600",
     order_index: 1
   },
   {
     id: "test-2",
-    name: "Vikram Malhotra",
-    designation: "Marketing Director",
-    company: "Apex Properties",
-    feedback: "Their Meta Ads performance is top-notch. They built an automation funnel that direct-routes leads to our sales reps. Our ROI has scaled by 4.5x in less than 3 months.",
+    name: "Sunita Reddy",
+    designation: "Founder",
+    company: "Urban Spaces • Mumbai",
+    feedback: "Our Google Ads ROI went from 1.2x to 4.5x within 3 months. Digital Ads World's PPC team understands our industry deeply and the monthly reporting is incredibly transparent.",
     rating: 5,
-    image_url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
+    date: "1 month ago",
+    initials: "SR",
+    bgColor: "bg-orange-500",
     order_index: 2
   },
   {
     id: "test-3",
-    name: "Neha Sharma",
-    designation: "Founder",
-    company: "E-Glow Cosmetics",
-    feedback: "We scaled our e-commerce store sales by 300% in our first campaign with them. They helped us identify our key buyer persona and focused purely on ROAS optimization.",
+    name: "Dr. Priya Rao",
+    designation: "Director",
+    company: "Wellness Clinics • Bangalore",
+    feedback: "What sets Digital Ads World apart is their collaborative approach. They genuinely listen, build strategy around our goals, and the results speak for themselves — 891% more leads.",
     rating: 5,
-    image_url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
+    date: "3 weeks ago",
+    initials: "PR",
+    bgColor: "bg-yellow-600",
     order_index: 3
+  },
+  {
+    id: "test-4",
+    name: "Ravi Kumar",
+    designation: "MD",
+    company: "Greenfield Builders • Hyderabad",
+    feedback: "We had tried 3 agencies before Digital Ads World. None delivered what they promised. Digital Ads World gave us page 1 rankings in just 4 months and our leads doubled. Highly recommend!",
+    rating: 5,
+    date: "5 weeks ago",
+    initials: "RK",
+    bgColor: "bg-teal-600",
+    order_index: 4
+  },
+  {
+    id: "test-5",
+    name: "Sravanthi P.",
+    designation: "Founder",
+    company: "FitLife Studio • Hyderabad",
+    feedback: "Exceptional team with great knowledge of digital marketing. They handled our social media and Google Ads and the response from customers improved drastically within weeks.",
+    rating: 5,
+    date: "6 weeks ago",
+    initials: "SP",
+    bgColor: "bg-purple-600",
+    order_index: 5
+  },
+  {
+    id: "test-6",
+    name: "Mahesh V.",
+    designation: "CEO",
+    company: "MedTech Solutions • Hyderabad",
+    feedback: "Digital Ads World managed our ₹50L+ annual ad budget with exceptional ROI. Their AI-powered optimization and transparent monthly reporting is unlike any agency we've worked with.",
+    rating: 5,
+    date: "2 months ago",
+    initials: "MV",
+    bgColor: "bg-indigo-600",
+    order_index: 6
   }
 ];
 

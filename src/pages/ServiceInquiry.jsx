@@ -4,7 +4,8 @@ import { services, agencyInfo } from '../data/siteContent';
 import * as LucideIcons from 'lucide-react';
 import { 
   ArrowLeft, CheckCircle2, MessageCircle, Send, 
-  HelpCircle, Clock, ShieldCheck, PhoneCall 
+  HelpCircle, Clock, ShieldCheck, PhoneCall,
+  Mail, UserPlus, Shield, Instagram, Laptop, Code, Sparkles, BarChart3, Award
 } from 'lucide-react';
 
 const defaultFormFields = [
@@ -57,13 +58,37 @@ export default function ServiceInquiry() {
     );
   }
 
-  // Resolving icon components dynamically
-  const renderIcon = (iconName, className) => {
-    const IconComponent = LucideIcons[iconName];
-    if (IconComponent) {
-      return <IconComponent className={className} />;
+  const renderOfficialIcon = (iconName, className = "w-5 h-5") => {
+    if (iconName === 'Google') {
+      return (
+        <svg viewBox="0 0 24 24" className={`${className} shrink-0`}>
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+        </svg>
+      );
     }
-    return <HelpCircle className={className} />;
+    if (iconName === 'Meta') {
+      return (
+        <svg viewBox="0 0 16 16" className={`${className} fill-blue-600 shrink-0`}>
+          <path fillRule="evenodd" d="M8.217 5.243C9.145 3.988 10.171 3 11.483 3 13.96 3 16 6.153 16.001 9.907c0 2.29-.986 3.725-2.757 3.725-1.543 0-2.395-.866-3.924-3.424l-.667-1.123-.118-.197a55 55 0 0 0-.53-.877l-1.178 2.08c-1.673 2.925-2.615 3.541-3.923 3.541C1.086 13.632 0 12.217 0 9.973 0 6.388 1.995 3 4.598 3q.477-.001.924.122c.31.086.611.22.913.407.577.359 1.154.915 1.782 1.714m1.516 2.224q-.378-.615-.727-1.133L9 6.326c.845-1.305 1.543-1.954 2.372-1.954 1.723 0 3.102 2.537 3.102 5.653 0 1.188-.39 1.877-1.195 1.877-.773 0-1.142-.51-2.61-2.87zM4.846 4.756c.725.1 1.385.634 2.34 2.001A212 212 0 0 0 5.551 9.3c-1.357 2.126-1.826 2.603-2.581 2.603-.777 0-1.24-.682-1.24-1.9 0-2.602 1.298-5.264 2.846-5.264q.137 0 .27.018"/>
+        </svg>
+      );
+    }
+    if (iconName === 'Mail') return <Mail className={`${className} text-orange-500 shrink-0`} />;
+    if (iconName === 'UserPlus') return <UserPlus className={`${className} text-green-600 shrink-0`} />;
+    if (iconName === 'Shield') return <Shield className={`${className} text-red-500 shrink-0`} />;
+    if (iconName === 'Search') return <LucideIcons.Search className={`${className} text-blue-500 shrink-0`} />;
+    if (iconName === 'Instagram') return <Instagram className={`${className} text-pink-600 shrink-0`} />;
+    if (iconName === 'Monitor') return <Laptop className={`${className} text-indigo-500 shrink-0`} />;
+    if (iconName === 'Code') return <Code className={`${className} text-cyan-500 shrink-0`} />;
+    if (iconName === 'Sparkles') return <Sparkles className={`${className} text-purple-500 shrink-0`} />;
+    if (iconName === 'BarChart3') return <BarChart3 className={`${className} text-teal-500 shrink-0`} />;
+    if (iconName === 'Award') return <Award className={`${className} text-amber-500 shrink-0`} />;
+    
+    const IconComp = LucideIcons[iconName] || LucideIcons.HelpCircle;
+    return <IconComp className={className} />;
   };
 
   const handleInputChange = (fieldName, value) => {
@@ -126,7 +151,7 @@ export default function ServiceInquiry() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mt-2">
             <div className="flex items-center gap-4 text-left">
               <div className="w-12 h-12 bg-blue-50 text-primary-blue rounded-xl flex items-center justify-center shrink-0">
-                {renderIcon(service.icon, "w-6 h-6")}
+                {renderOfficialIcon(service.icon, "w-6 h-6")}
               </div>
               <div>
                 <h1 className="text-2xl md:text-3xl font-black text-premium-black font-heading leading-tight">
@@ -156,14 +181,6 @@ export default function ServiceInquiry() {
             
             {/* Left detail Column */}
             <div className="lg:col-span-5 flex flex-col gap-8">
-              <div className="rounded-3xl overflow-hidden shadow-md border border-slate-100 aspect-[4/3] bg-slate-50">
-                <img
-                  src={service.image_url}
-                  alt={service.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
               <div className="flex flex-col gap-4">
                 <h3 className="text-lg font-bold text-premium-black font-heading">Core Channels Performance</h3>
                 <p className="text-slate-500 text-sm font-light leading-relaxed">
