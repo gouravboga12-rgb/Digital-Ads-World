@@ -4,7 +4,7 @@ import {
   Users, Layers, Settings, LogOut, CheckCircle2, Trash2, ShieldAlert, 
   Sparkles, RefreshCw, BarChart3, FileText, Plus, HelpCircle, 
   Upload, Trash, Edit2, Check, X, ShieldCheck, Mail, Info, FileSpreadsheet,
-  Clock, Search, Briefcase, Image, Eye, Download, Globe, MessageCircle
+  Clock, Search, Briefcase, Image, Eye, Download, Globe, MessageCircle, Calendar
 } from 'lucide-react';
 import { siteDataManager } from '../data/siteDataManager';
 import marketingTeamImg from '../assets/marketing_team.png';
@@ -454,7 +454,16 @@ export default function AdminPanel() {
 // ==========================================
 function DashboardSubView({ leads, setLeads, showToast }) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
   const [updatingId, setUpdatingId] = useState(null);
+
+  const formatDateTime = (iso) => {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    const date = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    const time = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+    return { date, time };
+  };
 
   const handleUpdateStatus = async (id, currentStatus) => {
     const nextStatus = currentStatus === 'new' ? 'contacted' : currentStatus === 'contacted' ? 'converted' : 'closed';
@@ -483,13 +492,18 @@ function DashboardSubView({ leads, setLeads, showToast }) {
 
   // Filter inquiries (only General Inquiries)
   const filteredLeads = leads.filter(lead => {
-    // Search filter
     const matchesSearch = 
       lead.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.phone?.includes(searchTerm);
     
     if (!matchesSearch) return false;
+
+    // Date filter
+    if (dateFilter) {
+      const leadDate = new Date(lead.created_at).toISOString().split('T')[0];
+      if (leadDate !== dateFilter) return false;
+    }
 
     // Filter out specific service order requests
     return lead.service === 'General Growth Consultation' || !lead.message?.includes('Custom Inquiry');
@@ -556,6 +570,25 @@ function DashboardSubView({ leads, setLeads, showToast }) {
             className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold"
           />
         </div>
+        <div className="flex items-center gap-3">
+          <div className="relative flex items-center">
+            <Calendar className="absolute left-3 text-slate-400 pointer-events-none" size={15} />
+            <input
+              type="date"
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+              className="pl-9 pr-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-600 bg-white cursor-pointer"
+            />
+          </div>
+          {dateFilter && (
+            <button
+              onClick={() => setDateFilter('')}
+              className="flex items-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-[10px] font-black uppercase tracking-wider rounded-xl transition-colors"
+            >
+              <X size={11} /> Clear
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Table Card */}
@@ -604,8 +637,16 @@ function DashboardSubView({ leads, setLeads, showToast }) {
                     {lead.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-xs text-slate-400">
-                  {new Date(lead.created_at).toLocaleDateString()}
+                <td className="px-6 py-4 text-xs text-slate-500 whitespace-nowrap">
+                  {(() => {
+                    const dt = formatDateTime(lead.created_at);
+                    return (
+                      <div>
+                        <div className="font-bold text-slate-700">{dt.date}</div>
+                        <div className="text-slate-400 mt-0.5 font-medium">{dt.time}</div>
+                      </div>
+                    );
+                  })()}
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center justify-center gap-2">
@@ -4745,7 +4786,16 @@ function TermsEditSubView({ terms, setTerms, agencyInfo, setAgencyInfo, showToas
 // ==========================================
 function OrdersSubView({ leads, setLeads, showToast }) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
   const [updatingId, setUpdatingId] = useState(null);
+
+  const formatDateTime = (iso) => {
+    if (!iso) return { date: '—', time: '' };
+    const d = new Date(iso);
+    const date = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    const time = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+    return { date, time };
+  };
 
   const handleUpdateStatus = async (id, currentStatus) => {
     const nextStatus = currentStatus === 'new' ? 'contacted' : currentStatus === 'contacted' ? 'converted' : 'closed';
@@ -4780,6 +4830,12 @@ function OrdersSubView({ leads, setLeads, showToast }) {
       lead.service?.toLowerCase().includes(searchTerm.toLowerCase());
     
     if (!matchesSearch) return false;
+
+    // Date filter
+    if (dateFilter) {
+      const leadDate = new Date(lead.created_at).toISOString().split('T')[0];
+      if (leadDate !== dateFilter) return false;
+    }
 
     return lead.service !== 'General Growth Consultation' && lead.message?.includes('Custom Inquiry');
   });
@@ -4837,6 +4893,25 @@ function OrdersSubView({ leads, setLeads, showToast }) {
               className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold"
             />
           </div>
+          <div className="flex items-center gap-3">
+            <div className="relative flex items-center">
+              <Calendar className="absolute left-3 text-slate-400 pointer-events-none" size={15} />
+              <input
+                type="date"
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                className="pl-9 pr-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-600 bg-white cursor-pointer"
+              />
+            </div>
+            {dateFilter && (
+              <button
+                onClick={() => setDateFilter('')}
+                className="flex items-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-[10px] font-black uppercase tracking-wider rounded-xl transition-colors"
+              >
+                <X size={11} /> Clear
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="overflow-x-auto">
@@ -4846,6 +4921,7 @@ function OrdersSubView({ leads, setLeads, showToast }) {
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Client details</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Requested Service</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Requirements details</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Submitted</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
               </tr>
@@ -4908,6 +4984,17 @@ function OrdersSubView({ leads, setLeads, showToast }) {
                           });
                         })()}
                       </div>
+                    </td>
+                    <td className="px-6 py-4 text-xs text-slate-500 whitespace-nowrap align-top">
+                      {(() => {
+                        const dt = formatDateTime(lead.created_at);
+                        return (
+                          <div>
+                            <div className="font-bold text-slate-700">{dt.date}</div>
+                            <div className="text-slate-400 mt-0.5 font-medium">{dt.time}</div>
+                          </div>
+                        );
+                      })()}
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
