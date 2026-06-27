@@ -18,6 +18,7 @@ import Contact from './pages/Contact';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import ServiceInquiry from './pages/ServiceInquiry';
+import TermsAndConditions from './pages/TermsAndConditions';
 
 export default function App() {
   useEffect(() => {
@@ -47,6 +48,7 @@ export default function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/terms" element={<TermsAndConditions />} />
           </Routes>
         </main>
 

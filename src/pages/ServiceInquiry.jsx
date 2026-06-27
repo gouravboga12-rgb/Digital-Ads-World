@@ -100,7 +100,7 @@ export default function ServiceInquiry() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone) return;
+    if (!formData.name || !formData.phone || !formData.email) return;
 
     setLoading(true);
 
@@ -224,7 +224,9 @@ export default function ServiceInquiry() {
                     {/* Standard Contact Fields */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Your Name</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
+                          Your Name <span className="text-rose-500">*</span>
+                        </label>
                         <input
                           type="text"
                           required
@@ -235,7 +237,9 @@ export default function ServiceInquiry() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Phone Number</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
+                          Phone Number <span className="text-rose-500">*</span>
+                        </label>
                         <input
                           type="tel"
                           required
@@ -248,9 +252,12 @@ export default function ServiceInquiry() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Email Address</label>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
+                        Email Address <span className="text-rose-500">*</span>
+                      </label>
                       <input
                         type="email"
+                        required
                         placeholder="e.g. digitaladsworld.co@gmail.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -267,7 +274,7 @@ export default function ServiceInquiry() {
                       {formFields.map((field) => (
                         <div key={field.name}>
                           <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
-                            {field.label}
+                            {field.label} {field.type === 'text' && <span className="text-rose-500">*</span>}
                           </label>
 
                           {field.type === 'text' && (

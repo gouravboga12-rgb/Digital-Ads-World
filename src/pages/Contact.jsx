@@ -24,7 +24,7 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone) return;
+    if (!formData.name || !formData.phone || !formData.email) return;
 
     try {
       const response = await fetch('/api/leads', {
@@ -160,7 +160,9 @@ export default function Contact() {
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Your Name</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
+                          Your Name <span className="text-rose-500">*</span>
+                        </label>
                         <input
                           type="text"
                           required
@@ -171,7 +173,9 @@ export default function Contact() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Phone Number</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
+                          Phone Number <span className="text-rose-500">*</span>
+                        </label>
                         <input
                           type="tel"
                           required
@@ -185,9 +189,12 @@ export default function Contact() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Email Address</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
+                          Email Address <span className="text-rose-500">*</span>
+                        </label>
                         <input
                           type="email"
+                          required
                           placeholder="e.g. john@company.com"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}

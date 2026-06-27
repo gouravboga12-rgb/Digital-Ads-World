@@ -129,8 +129,9 @@ export default function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>© {new Date().getFullYear()} {agencyInfo.name}. All rights reserved.</p>
           <div className="flex gap-6">
-            <span className="hover:text-slate-400 cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-slate-400 cursor-pointer">Terms of Service</span>
+            <Link to="/terms" onClick={handleScrollToTop} className="hover:text-slate-400">
+              Terms & Conditions
+            </Link>
           </div>
         </div>
       </div>
