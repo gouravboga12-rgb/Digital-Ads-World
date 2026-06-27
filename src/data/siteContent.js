@@ -303,31 +303,45 @@ export const testimonials = [
 export const caseStudies = [
   {
     id: "c-1",
-    title: "Scaling an E-Commerce Fashion Brand to 6.2x ROAS",
-    slug: "ecom-fashion-6x-roas",
-    client: "Zara & Co E-comm",
-    challenge: "High CAC (Cost Per Acquisition) and stagnant sales with Facebook standard campaigns.",
-    solution: "We restructured the Facebook pixel events, set up high-retention lookalike audiences, and deployed interactive video ads focusing on immediate benefits.",
+    title: "9.5x Appointment Volume and Lead Flow for Corporate Hospitals",
+    slug: "corporate-hospitals-9x-appointments",
+    client: "Medicover & Yashoda Hospitals",
+    challenge: "High patient acquisition cost and low inquiry conversion rates for premium elective specialties.",
+    solution: "Implemented multi-channel Meta & Google Search funnels synced to automated CRM pipelines, targeting local patient cohorts.",
     results: [
-      { label: "ROAS Boost", value: "6.2x" },
-      { label: "CAC Reduction", value: "-45%" },
-      { label: "Total Revenue Generated", value: "$180,000" }
+      { label: "Bookings Boost", value: "9.5x" },
+      { label: "Cost per Lead", value: "-40%" },
+      { label: "Revenue Pipeline", value: "₹2.4 Cr+" }
     ],
-    image_url: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80"
+    image_url: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=800&q=80"
   },
   {
     id: "c-2",
-    title: "10x Lead Volume for Premium Real Estate Builder",
-    slug: "real-estate-10x-leads",
-    client: "Prestige Estates Agency",
-    challenge: "Struggling to find verified, high-intent home buyers via standard interest targeting.",
-    solution: "We initiated a Google Search Campaign combined with custom YouTube bumpers targeting intent-based search terms. Redirected leads into a conversational WhatsApp funnel.",
+    title: "Scaling Solar Inquiries to 5.8x ROI via Intent-Based Campaigns",
+    slug: "solar-solar-inquiries-5x-roi",
+    client: "Freyr Energy",
+    challenge: "Low-intent leads and high cost-per-lead for residential and commercial solar installations.",
+    solution: "Launched targeted Google search campaigns and interactive YouTube ad funnels highlighting government solar subsidies and net-metering benefits.",
     results: [
-      { label: "Lead Increase", value: "+950%" },
-      { label: "Cost Per Lead", value: "-30%" },
-      { label: "Qualified Meetings Booked", value: "85" }
+      { label: "Marketing ROI", value: "5.8x" },
+      { label: "High-Intent Leads", value: "+340%" },
+      { label: "Sales Pipeline", value: "₹1.8 Cr+" }
     ],
-    image_url: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=800&q=80"
+    image_url: "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "c-3",
+    title: "92% Increase in Student Registrations for Vocational Programs",
+    slug: "vocational-student-registrations-92-percent",
+    client: "Apollo MedSkills",
+    challenge: "Stagnant organic traffic and drop-offs in digital application forms for training programs.",
+    solution: "Rebuilt mobile-friendly landing pages, technical SEO audit, and high-performance search campaigns routing leads directly to local branch counselors.",
+    results: [
+      { label: "Registrations", value: "+92%" },
+      { label: "Cost per Acquisition", value: "-35%" },
+      { label: "Google Rankings", value: "Page 1" }
+    ],
+    image_url: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80"
   }
 ];
 

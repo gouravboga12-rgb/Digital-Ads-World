@@ -634,11 +634,11 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {caseStudies.map((study) => (
               <div 
                 key={study.id} 
-                className="bg-white rounded-3xl overflow-hidden border border-slate-100 flex flex-col hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 text-left"
+                className="bg-white rounded-3xl overflow-hidden border border-slate-100 flex flex-col hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 text-left h-full"
                 data-aos="fade-up"
               >
                 <img
