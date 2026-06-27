@@ -261,6 +261,67 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 5. TRUSTED BY 50+ BUSINESSES ACROSS INDIA */}
+      <section className="py-20 bg-slate-50 border-y border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="text-xs font-black tracking-widest text-primary-blue uppercase">
+            Brands
+          </span>
+          <h2 className="text-3xl md:text-4xl font-black mt-3 mb-2 tracking-tight text-premium-black font-heading">
+            Trusted by 50+ Businesses Across India
+          </h2>
+          <p className="text-slate-500 max-w-xl mx-auto mb-12 text-sm font-light">
+            From healthcare to real estate — brands that chose Digital Ads World and scaled.
+          </p>
+
+          {/* Logos Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-12">
+            {brandLogos.map((brand, i) => (
+              <div 
+                key={i} 
+                className="bg-white rounded-2xl p-3 border border-slate-100 shadow-sm flex items-center justify-center text-center h-28 hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              >
+                <img 
+                  src={brand.logo} 
+                  alt={brand.name} 
+                  className="max-h-full max-w-full object-contain"
+                />
+              </div>
+            ))}
+            <div className="bg-blue-50 border border-blue-100/50 rounded-2xl p-3 shadow-sm flex items-center justify-center text-center h-28 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+              <span className="text-xs sm:text-sm text-primary-blue font-bold uppercase tracking-wider">50+ More Brands</span>
+            </div>
+          </div>
+
+          {/* Dark Stats Banner */}
+          <div className="bg-slate-900 text-white rounded-[32px] p-8 md:p-12 border border-slate-800 shadow-xl relative overflow-hidden text-center mt-6">
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12 relative z-10">
+              <div data-aos="zoom-in" data-aos-delay="100">
+                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">50+</h3>
+                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Happy Clients</p>
+              </div>
+              <div data-aos="zoom-in" data-aos-delay="200">
+                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">500+</h3>
+                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Projects Delivered</p>
+              </div>
+              <div data-aos="zoom-in" data-aos-delay="300">
+                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">4 Years</h3>
+                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Industry Experience</p>
+              </div>
+              <div data-aos="zoom-in" data-aos-delay="400">
+                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">1 Cr +</h3>
+                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Ad Budget Managed</p>
+              </div>
+              <div className="col-span-2 lg:col-span-1" data-aos="zoom-in" data-aos-delay="500">
+                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">10+</h3>
+                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Professional Team</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 2. WHO WE ARE & PHILOSOPHY */}
       <section className="py-20 bg-slate-50 border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -378,66 +439,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. TRUSTED BY 50+ BUSINESSES ACROSS INDIA */}
-      <section className="py-20 bg-slate-50 border-y border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-xs font-black tracking-widest text-primary-blue uppercase">
-            Brands
-          </span>
-          <h2 className="text-3xl md:text-4xl font-black mt-3 mb-2 tracking-tight text-premium-black font-heading">
-            Trusted by 50+ Businesses Across India
-          </h2>
-          <p className="text-slate-500 max-w-xl mx-auto mb-12 text-sm font-light">
-            From healthcare to real estate — brands that chose Digital Ads World and scaled.
-          </p>
 
-          {/* Logos Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-12">
-            {brandLogos.map((brand, i) => (
-              <div 
-                key={i} 
-                className="bg-white rounded-2xl p-3 border border-slate-100 shadow-sm flex items-center justify-center text-center h-28 hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden"
-              >
-                <img 
-                  src={brand.logo} 
-                  alt={brand.name} 
-                  className="max-h-full max-w-full object-contain"
-                />
-              </div>
-            ))}
-            <div className="bg-blue-50 border border-blue-100/50 rounded-2xl p-3 shadow-sm flex items-center justify-center text-center h-28 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-              <span className="text-xs sm:text-sm text-primary-blue font-bold uppercase tracking-wider">50+ More Brands</span>
-            </div>
-          </div>
-
-          {/* Dark Stats Banner */}
-          <div className="bg-slate-900 text-white rounded-[32px] p-8 md:p-12 border border-slate-800 shadow-xl relative overflow-hidden text-center mt-6">
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12 relative z-10">
-              <div data-aos="zoom-in" data-aos-delay="100">
-                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">50+</h3>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Happy Clients</p>
-              </div>
-              <div data-aos="zoom-in" data-aos-delay="200">
-                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">500+</h3>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Projects Delivered</p>
-              </div>
-              <div data-aos="zoom-in" data-aos-delay="300">
-                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">4 Years</h3>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Industry Experience</p>
-              </div>
-              <div data-aos="zoom-in" data-aos-delay="400">
-                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">1 Cr +</h3>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Ad Budget Managed</p>
-              </div>
-              <div className="col-span-2 lg:col-span-1" data-aos="zoom-in" data-aos-delay="500">
-                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">10+</h3>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Professional Team</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* 6. TIMELINE OUR JOURNEY */}
       <section className="py-20 bg-white border-b border-slate-100">
