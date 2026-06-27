@@ -454,16 +454,20 @@ export default function AdminPanel() {
 // ==========================================
 function DashboardSubView({ leads, setLeads, showToast }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [dateFilter, setDateFilter] = useState('');
+  const [filterMode, setFilterMode] = useState('all'); // all | day | month | year
+  const [filterValue, setFilterValue] = useState('');
   const [updatingId, setUpdatingId] = useState(null);
 
   const formatDateTime = (iso) => {
-    if (!iso) return '—';
+    if (!iso) return { date: '—', time: '' };
     const d = new Date(iso);
     const date = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
     const time = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
     return { date, time };
   };
+
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: 5 }, (_, i) => currentYear - i);
 
   const handleUpdateStatus = async (id, currentStatus) => {
     const nextStatus = currentStatus === 'new' ? 'contacted' : currentStatus === 'contacted' ? 'converted' : 'closed';
@@ -500,9 +504,17 @@ function DashboardSubView({ leads, setLeads, showToast }) {
     if (!matchesSearch) return false;
 
     // Date filter
-    if (dateFilter) {
-      const leadDate = new Date(lead.created_at).toISOString().split('T')[0];
-      if (leadDate !== dateFilter) return false;
+    if (filterMode !== 'all' && filterValue) {
+      const d = new Date(lead.created_at);
+      if (filterMode === 'day') {
+        const leadDate = d.toISOString().split('T')[0];
+        if (leadDate !== filterValue) return false;
+      } else if (filterMode === 'month') {
+        const leadMonth = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+        if (leadMonth !== filterValue) return false;
+      } else if (filterMode === 'year') {
+        if (String(d.getFullYear()) !== filterValue) return false;
+      }
     }
 
     // Filter out specific service order requests
@@ -559,36 +571,83 @@ function DashboardSubView({ leads, setLeads, showToast }) {
       </div>
 
       {/* Filter and search bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3.5 top-3 text-slate-400" size={16} />
-          <input
-            type="text"
-            placeholder="Search inquiries..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold"
-          />
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="relative flex items-center">
-            <Calendar className="absolute left-3 text-slate-400 pointer-events-none" size={15} />
+      <div className="bg-white rounded-2xl border border-slate-200/80 p-4 space-y-3 shadow-sm">
+        {/* Row 1: Search + Mode toggle + Clear */}
+        <div className="flex flex-wrap gap-3 items-center justify-between">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3.5 top-2.5 text-slate-400" size={15} />
             <input
-              type="date"
-              value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
-              className="pl-9 pr-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-600 bg-white cursor-pointer"
+              type="text"
+              placeholder="Search inquiries..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold"
             />
           </div>
-          {dateFilter && (
+
+          <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1">
+            {['all','day','month','year'].map(mode => (
+              <button
+                key={mode}
+                onClick={() => { setFilterMode(mode); setFilterValue(''); }}
+                className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${
+                  filterMode === mode ? 'bg-primary-blue text-white shadow' : 'text-slate-500 hover:bg-white'
+                }`}
+              >
+                {mode === 'all' ? 'All' : mode === 'day' ? 'Day' : mode === 'month' ? 'Month' : 'Year'}
+              </button>
+            ))}
+          </div>
+
+          {filterMode !== 'all' && filterValue && (
             <button
-              onClick={() => setDateFilter('')}
-              className="flex items-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-[10px] font-black uppercase tracking-wider rounded-xl transition-colors"
+              onClick={() => setFilterValue('')}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-[10px] font-black uppercase tracking-wider rounded-xl transition-colors"
             >
               <X size={11} /> Clear
             </button>
           )}
         </div>
+
+        {/* Row 2: Date input (shown only when a mode is selected) */}
+        {filterMode === 'day' && (
+          <div className="flex items-center gap-2">
+            <Calendar size={14} className="text-slate-400 shrink-0" />
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Date:</span>
+            <input
+              type="date"
+              value={filterValue}
+              onChange={(e) => setFilterValue(e.target.value)}
+              className="px-3 py-1.5 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-600 bg-white cursor-pointer"
+            />
+          </div>
+        )}
+        {filterMode === 'month' && (
+          <div className="flex items-center gap-2">
+            <Calendar size={14} className="text-slate-400 shrink-0" />
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Month:</span>
+            <input
+              type="month"
+              value={filterValue}
+              onChange={(e) => setFilterValue(e.target.value)}
+              className="px-3 py-1.5 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-600 bg-white cursor-pointer"
+            />
+          </div>
+        )}
+        {filterMode === 'year' && (
+          <div className="flex items-center gap-2">
+            <Calendar size={14} className="text-slate-400 shrink-0" />
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Year:</span>
+            <select
+              value={filterValue}
+              onChange={(e) => setFilterValue(e.target.value)}
+              className="px-3 py-1.5 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-600 bg-white cursor-pointer"
+            >
+              <option value="">-- Pick Year --</option>
+              {yearOptions.map(y => <option key={y} value={String(y)}>{y}</option>)}
+            </select>
+          </div>
+        )}
       </div>
 
       {/* Table Card */}
@@ -4786,7 +4845,8 @@ function TermsEditSubView({ terms, setTerms, agencyInfo, setAgencyInfo, showToas
 // ==========================================
 function OrdersSubView({ leads, setLeads, showToast }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [dateFilter, setDateFilter] = useState('');
+  const [filterMode, setFilterMode] = useState('all'); // all | day | month | year
+  const [filterValue, setFilterValue] = useState('');
   const [updatingId, setUpdatingId] = useState(null);
 
   const formatDateTime = (iso) => {
@@ -4796,6 +4856,9 @@ function OrdersSubView({ leads, setLeads, showToast }) {
     const time = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
     return { date, time };
   };
+
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: 5 }, (_, i) => currentYear - i);
 
   const handleUpdateStatus = async (id, currentStatus) => {
     const nextStatus = currentStatus === 'new' ? 'contacted' : currentStatus === 'contacted' ? 'converted' : 'closed';
@@ -4832,9 +4895,17 @@ function OrdersSubView({ leads, setLeads, showToast }) {
     if (!matchesSearch) return false;
 
     // Date filter
-    if (dateFilter) {
-      const leadDate = new Date(lead.created_at).toISOString().split('T')[0];
-      if (leadDate !== dateFilter) return false;
+    if (filterMode !== 'all' && filterValue) {
+      const d = new Date(lead.created_at);
+      if (filterMode === 'day') {
+        const leadDate = d.toISOString().split('T')[0];
+        if (leadDate !== filterValue) return false;
+      } else if (filterMode === 'month') {
+        const leadMonth = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+        if (leadMonth !== filterValue) return false;
+      } else if (filterMode === 'year') {
+        if (String(d.getFullYear()) !== filterValue) return false;
+      }
     }
 
     return lead.service !== 'General Growth Consultation' && lead.message?.includes('Custom Inquiry');
@@ -4882,36 +4953,83 @@ function OrdersSubView({ leads, setLeads, showToast }) {
       </div>
 
       <div className="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <div className="relative w-full sm:w-72">
-            <Search className="absolute left-3.5 top-3 text-slate-400" size={16} />
-            <input
-              type="text"
-              placeholder="Search orders..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold"
-            />
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="relative flex items-center">
-              <Calendar className="absolute left-3 text-slate-400 pointer-events-none" size={15} />
+        <div className="p-4 border-b border-slate-100 space-y-3">
+          {/* Row 1: Search + Mode toggle */}
+          <div className="flex flex-wrap gap-3 items-center justify-between">
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3.5 top-2.5 text-slate-400" size={15} />
               <input
-                type="date"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-                className="pl-9 pr-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-600 bg-white cursor-pointer"
+                type="text"
+                placeholder="Search orders..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold"
               />
             </div>
-            {dateFilter && (
+
+            <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1">
+              {['all','day','month','year'].map(mode => (
+                <button
+                  key={mode}
+                  onClick={() => { setFilterMode(mode); setFilterValue(''); }}
+                  className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${
+                    filterMode === mode ? 'bg-primary-blue text-white shadow' : 'text-slate-500 hover:bg-white'
+                  }`}
+                >
+                  {mode === 'all' ? 'All' : mode === 'day' ? 'Day' : mode === 'month' ? 'Month' : 'Year'}
+                </button>
+              ))}
+            </div>
+
+            {filterMode !== 'all' && filterValue && (
               <button
-                onClick={() => setDateFilter('')}
-                className="flex items-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-[10px] font-black uppercase tracking-wider rounded-xl transition-colors"
+                onClick={() => setFilterValue('')}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-[10px] font-black uppercase tracking-wider rounded-xl transition-colors"
               >
                 <X size={11} /> Clear
               </button>
             )}
           </div>
+
+          {/* Row 2: Date input picker */}
+          {filterMode === 'day' && (
+            <div className="flex items-center gap-2">
+              <Calendar size={14} className="text-slate-400 shrink-0" />
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Date:</span>
+              <input
+                type="date"
+                value={filterValue}
+                onChange={(e) => setFilterValue(e.target.value)}
+                className="px-3 py-1.5 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-600 bg-white cursor-pointer"
+              />
+            </div>
+          )}
+          {filterMode === 'month' && (
+            <div className="flex items-center gap-2">
+              <Calendar size={14} className="text-slate-400 shrink-0" />
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Month:</span>
+              <input
+                type="month"
+                value={filterValue}
+                onChange={(e) => setFilterValue(e.target.value)}
+                className="px-3 py-1.5 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-600 bg-white cursor-pointer"
+              />
+            </div>
+          )}
+          {filterMode === 'year' && (
+            <div className="flex items-center gap-2">
+              <Calendar size={14} className="text-slate-400 shrink-0" />
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Year:</span>
+              <select
+                value={filterValue}
+                onChange={(e) => setFilterValue(e.target.value)}
+                className="px-3 py-1.5 border border-slate-200 rounded-xl focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-600 bg-white cursor-pointer"
+              >
+                <option value="">-- Pick Year --</option>
+                {yearOptions.map(y => <option key={y} value={String(y)}>{y}</option>)}
+              </select>
+            </div>
+          )}
         </div>
 
         <div className="overflow-x-auto">
