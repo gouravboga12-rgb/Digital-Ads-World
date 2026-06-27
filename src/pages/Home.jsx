@@ -13,7 +13,7 @@ import {
 import * as LucideIcons from 'lucide-react';
 import { 
   agencyInfo, services, testimonials, 
-  caseStudies, faqs, gallery, team 
+  faqs, gallery, team 
 } from '../data/siteContent';
 import Lightbox from '../components/Lightbox';
 import profitableConversionsImg from '../assets/profitable_conversions.png';
@@ -613,67 +613,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 9. CASE STUDIES */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-6">
-            <div className="text-left">
-              <span className="text-xs font-black tracking-widest text-primary-blue uppercase">
-                Case Studies
-              </span>
-              <h2 className="text-3xl md:text-4xl font-black mt-3 tracking-tight text-premium-black font-heading">
-                Real Client Transformations
-              </h2>
-            </div>
-            <Link
-              to="/gallery"
-              className="text-primary-blue hover:text-blue-700 font-bold text-sm flex items-center gap-1 border-b border-primary-blue hover:border-blue-700 transition-colors pb-1 w-fit shrink-0"
-            >
-              <span>View Campaign Portfolio</span>
-              <ArrowRight size={14} />
-            </Link>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {caseStudies.map((study) => (
-              <div 
-                key={study.id} 
-                className="bg-white rounded-3xl overflow-hidden border border-slate-100 flex flex-col hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 text-left h-full"
-                data-aos="fade-up"
-              >
-                <img
-                  src={study.image_url}
-                  alt={study.title}
-                  className="w-full h-[260px] object-cover"
-                />
-                <div className="p-8 flex flex-col gap-5 flex-grow">
-                  <span className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none">
-                    Client: {study.client}
-                  </span>
-                  <h3 className="text-xl font-bold tracking-tight text-premium-black font-heading leading-tight">
-                    {study.title}
-                  </h3>
-                  
-                  <div className="space-y-3 mt-2 text-sm text-slate-600 font-light">
-                    <p><strong>Challenge:</strong> {study.challenge}</p>
-                    <p><strong>Solution:</strong> {study.solution}</p>
-                  </div>
-
-                  {/* Results Grid */}
-                  <div className="grid grid-cols-3 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200/50 mt-auto">
-                    {study.results.map((res, i) => (
-                      <div key={i} className="text-center">
-                        <span className="text-lg font-black text-primary-blue font-heading">{res.value}</span>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase mt-0.5">{res.label}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* 10. GALLERY SECTION */}
       <section className="py-20 bg-white">
