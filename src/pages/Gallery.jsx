@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { gallery as initialGallery } from '../data/siteContent';
+import { siteDataManager } from '../data/siteDataManager';
 import Lightbox from '../components/Lightbox';
 import { Maximize2, Tag } from 'lucide-react';
 
@@ -7,6 +8,16 @@ export default function Gallery() {
   const [items, setItems] = useState(initialGallery);
   const [activeFilter, setActiveFilter] = useState('all');
   const [lightboxIndex, setLightboxIndex] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    siteDataManager.getGallery().then(data => {
+      if (active && data && data.length > 0) {
+        setItems(data);
+      }
+    }).catch(e => console.error("Gallery fetch failed:", e));
+    return () => { active = false; };
+  }, []);
 
   const filters = [
     { label: 'All Projects', value: 'all' },

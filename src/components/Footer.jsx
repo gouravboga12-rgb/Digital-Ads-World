@@ -1,10 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Linkedin, Instagram, Facebook, ArrowUpRight } from 'lucide-react';
-import { agencyInfo } from '../data/siteContent';
+import { agencyInfo as defaultAgencyInfo } from '../data/siteContent';
+import { siteDataManager } from '../data/siteDataManager';
+import { useState, useEffect } from 'react';
 import footerLogo from '../assets/footer_logo.png';
 
 export default function Footer() {
+  const [agencyInfo, setAgencyInfo] = useState(defaultAgencyInfo);
+
+  useEffect(() => {
+    let active = true;
+    async function loadData() {
+      try {
+        const info = await siteDataManager.getAgencyInfo();
+        if (active && info) {
+          setAgencyInfo(info);
+        }
+      } catch (e) {
+        console.error("Error loading footer agencyInfo:", e);
+      }
+    }
+    loadData();
+    return () => { active = false; };
+  }, []);
+
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

@@ -1,38 +1,34 @@
-import React from 'react';
-import { team, agencyInfo } from '../data/siteContent';
+import { team as defaultTeam, agencyInfo as defaultAgencyInfo } from '../data/siteContent';
+import { siteDataManager } from '../data/siteDataManager';
+import { useState, useEffect } from 'react';
 import { Target, Eye, Shield, Users, Compass, CompassIcon, Landmark, Star, CheckSquare } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import marketingTeamImg from '../assets/marketing_team.png';
 
 export default function About() {
-  const coreValues = [
-    {
-      title: "Absolute ROI Focus",
-      description: "We align all marketing strategies with actual sales revenue and cashflow, rather than clicks or branding impressions.",
-      icon: Target
-    },
-    {
-      title: "Data Transparency",
-      description: "No hidden spreadsheets. Our partners see live conversion data routed directly from platforms like Google Ads and Meta Pixel.",
-      icon: Eye
-    },
-    {
-      title: "High Integrity",
-      description: "We are selective about partnerships. If we believe a product is not ready to scale, we state it transparently.",
-      icon: Shield
-    },
-    {
-      title: "Creative Innovation",
-      description: "Dynamic ad creative styles are changed consistently to combat audience fatigue and reduce conversion prices.",
-      icon: Users
-    }
-  ];
+  const [team, setTeam] = useState(defaultTeam);
+  const [agencyInfo, setAgencyInfo] = useState(defaultAgencyInfo);
 
-  const milestones = [
-    { year: "2023", title: "The Inception", desc: "Digital Ads World was founded in Hyderabad by K Charan with a single goal: driving performance-first results." },
-    { year: "2024", title: "Scaling Up", desc: "D Sri Ram joined to spearhead Digital Marketing, expanding ad management capacity by 300%." },
-    { year: "2025", title: "Global Client Base", desc: "Serviced over 50+ clients globally, managing over $2.4 Million in cumulative ad spend." },
-    { year: "2026", title: "Dynamic Lead Systems", desc: "Launched automated conversation funnels integrating client databases with immediate WhatsApp routing." }
-  ];
+  useEffect(() => {
+    let active = true;
+    async function loadData() {
+      try {
+        const [t, info] = await Promise.all([
+          siteDataManager.getTeam(),
+          siteDataManager.getAgencyInfo()
+        ]);
+        if (active) {
+          if (t) setTeam(t);
+          if (info) setAgencyInfo(info);
+        }
+      } catch (e) {
+        console.error("Error loading dynamic about page content:", e);
+      }
+    }
+    loadData();
+    return () => { active = false; };
+  }, []);
+
 
   return (
     <div className="relative w-full overflow-hidden bg-white">
@@ -41,13 +37,13 @@ export default function About() {
       <section className="bg-slate-50 py-16 md:py-24 border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-down">
           <span className="bg-blue-50 text-primary-blue text-xs font-black tracking-widest uppercase px-3.5 py-1.5 rounded-full">
-            Who We Are
+            {agencyInfo?.about_banner_tag || "Who We Are"}
           </span>
           <h1 className="text-4xl md:text-5xl font-black text-premium-black mt-4 font-heading">
-            Meet the Results-Driven Agency
+            {agencyInfo?.about_banner_title || "Meet the Results-Driven Agency"}
           </h1>
           <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base mt-2 font-light">
-            We are a group of developers, copywriters, and media buyers who don't run ads, but drive verified growth.
+            {agencyInfo?.about_banner_subtitle || "We are a group of developers, copywriters, and media buyers who don't run ads, but drive verified growth."}
           </p>
         </div>
       </section>
@@ -58,15 +54,17 @@ export default function About() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             <div className="lg:col-span-6 flex flex-col gap-6 text-left" data-aos="fade-right">
-              <span className="text-xs font-black tracking-widest text-primary-blue uppercase">Our Philosophy</span>
+              <span className="text-xs font-black tracking-widest text-primary-blue uppercase">
+                {agencyInfo?.about_philosophy_tag || "Our Philosophy"}
+              </span>
               <h2 className="text-3xl font-black text-premium-black font-heading leading-tight">
-                Empowering Businesses To Break Through Stagnation.
+                {agencyInfo?.about_philosophy_title || "Empowering Businesses To Break Through Stagnation."}
               </h2>
               <p className="text-slate-600 leading-relaxed font-light text-sm sm:text-base">
-                Traditional marketing models rely heavily on generic brand awareness campaigns that fail to justify their cost. At Digital Ads World, we operate on a completely different model: performance-based customer acquisition. We construct custom digital pipelines for each of our clients, syncing highly persuasive ad copies, landing pages, and email lists to deliver high-converting inquiries.
+                {agencyInfo?.about_philosophy_text || "Traditional marketing models rely heavily on generic brand awareness campaigns that fail to justify their cost. At Digital Ads World, we operate on a completely different model: performance-based customer acquisition. We construct custom digital pipelines for each of our clients, syncing highly persuasive ad copies, landing pages, and email lists to deliver high-converting inquiries."}
               </p>
               <div className="space-y-3">
-                {['Custom optimization cycles', 'Dedicated account managers', 'Daily budget checks', 'ROI matching models'].map((text, i) => (
+                {(agencyInfo?.about_philosophy_bullets || ['Custom optimization cycles', 'Dedicated account managers', 'Daily budget checks', 'ROI matching models']).map((text, i) => (
                   <div key={i} className="flex items-center gap-2">
                     <CheckSquare size={16} className="text-primary-blue" />
                     <span className="text-sm font-semibold text-slate-700">{text}</span>
@@ -78,12 +76,12 @@ export default function About() {
             <div className="lg:col-span-6" data-aos="fade-left">
               <div className="grid grid-cols-2 gap-4">
                 <img
-                  src={marketingTeamImg}
+                  src={agencyInfo?.hero_image_url || marketingTeamImg}
                   alt="Marketing team"
                   className="rounded-3xl w-full h-[280px] object-cover shadow-md"
                 />
                 <img
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=400&q=80"
+                  src={agencyInfo?.about_philosophy_image_url || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=400&q=80"}
                   alt="Collaboration team"
                   className="rounded-3xl w-full h-[280px] object-cover mt-8 shadow-md"
                 />
@@ -153,9 +151,11 @@ export default function About() {
               <div className="w-12 h-12 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center mb-6">
                 <Target size={24} />
               </div>
-              <h3 className="text-xl font-bold text-premium-black font-heading mb-3">Our Mission</h3>
+              <h3 className="text-xl font-bold text-premium-black font-heading mb-3">
+                {agencyInfo?.about_mission_title || "Our Mission"}
+              </h3>
               <p className="text-slate-500 text-sm leading-relaxed font-light">
-                To construct scalable customer acquisition channels that transform marketing budgets into transparent, compounding sales pipelines. We resolve to elevate industry benchmarks through data-driven campaigns.
+                {agencyInfo?.about_mission_text || "To construct scalable customer acquisition channels that transform marketing budgets into transparent, compounding sales pipelines. We resolve to elevate industry benchmarks through data-driven campaigns."}
               </p>
             </div>
             
@@ -163,9 +163,11 @@ export default function About() {
               <div className="w-12 h-12 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center mb-6">
                 <Eye size={24} />
               </div>
-              <h3 className="text-xl font-bold text-premium-black font-heading mb-3">Our Vision</h3>
+              <h3 className="text-xl font-bold text-premium-black font-heading mb-3">
+                {agencyInfo?.about_vision_title || "Our Vision"}
+              </h3>
               <p className="text-slate-500 text-sm leading-relaxed font-light">
-                To be recognized as the premier global standard for ROI-centric performance marketing, helping over 1,000 businesses break past digital plateaus using specialized funnel designs.
+                {agencyInfo?.about_vision_text || "To be recognized as the premier global standard for ROI-centric performance marketing, helping over 1,000 businesses break past digital plateaus using specialized funnel designs."}
               </p>
             </div>
           </div>
@@ -176,8 +178,16 @@ export default function About() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-left">
-            {coreValues.map((value, i) => {
-              const IconComp = value.icon;
+            {(agencyInfo.values && agencyInfo.values.length > 0
+              ? agencyInfo.values
+              : [
+                  { title: "Absolute ROI Focus", description: "We align all marketing strategies with actual sales revenue and cashflow, rather than clicks or branding impressions.", icon: "Target" },
+                  { title: "Data Transparency", description: "No hidden spreadsheets. Our partners see live conversion data routed directly from platforms like Google Ads and Meta Pixel.", icon: "Eye" },
+                  { title: "High Integrity", description: "We are selective about partnerships. If we believe a product is not ready to scale, we state it transparently.", icon: "Shield" },
+                  { title: "Creative Innovation", description: "Dynamic ad creative styles are changed consistently to combat audience fatigue and reduce conversion prices.", icon: "Users" }
+                ]
+            ).map((value, i) => {
+              const IconComp = LucideIcons[value.icon] || Target;
               return (
                 <div key={i} className="flex flex-col gap-4 p-4" data-aos="fade-up" data-aos-delay={i * 50}>
                   <div className="w-10 h-10 rounded-xl bg-blue-50 text-primary-blue flex items-center justify-center">
@@ -201,14 +211,22 @@ export default function About() {
           </div>
 
           <div className="relative border-l border-slate-200 ml-4 md:ml-32 md:mr-32 text-left">
-            {milestones.map((item, index) => (
+            {(agencyInfo?.journey && agencyInfo.journey.length > 0
+              ? agencyInfo.journey
+              : [
+                  { year: "2023", title: "The Inception", desc: "Digital Ads World was founded in Hyderabad by K Charan with a single goal: driving performance-first results." },
+                  { year: "2024", title: "Scaling Up", desc: "G Sri Ram joined to spearhead Digital Marketing, expanding ad management capacity by 300%." },
+                  { year: "2025", title: "Global Client Base", desc: "Serviced over 50+ clients globally, managing over $2.4 Million in cumulative ad spend." },
+                  { year: "2026", title: "Dynamic Lead Systems", desc: "Launched automated conversation funnels integrating client databases with immediate WhatsApp routing." }
+                ]
+            ).map((item, index) => (
               <div key={index} className="mb-12 ml-6 relative" data-aos="fade-up">
                 {/* Timeline dot */}
                 <div className="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-primary-blue border-4 border-white shadow-sm"></div>
                 
                 <span className="text-xs font-black text-primary-blue">{item.year}</span>
                 <h3 className="text-lg font-bold text-premium-black font-heading mt-1">{item.title}</h3>
-                <p className="text-slate-500 text-xs sm:text-sm font-light mt-1.5 leading-relaxed max-w-2xl">{item.desc}</p>
+                <p className="text-slate-500 text-xs sm:text-sm font-light mt-1.5 leading-relaxed max-w-2xl">{item.desc || item.description}</p>
               </div>
             ))}
           </div>

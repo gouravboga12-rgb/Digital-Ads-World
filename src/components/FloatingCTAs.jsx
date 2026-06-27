@@ -1,9 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, MessageCircle } from 'lucide-react';
-import { agencyInfo } from '../data/siteContent';
+import { agencyInfo as defaultAgencyInfo } from '../data/siteContent';
+import { siteDataManager } from '../data/siteDataManager';
 
 export default function FloatingCTAs() {
-  const whatsappUrl = `https://wa.me/91${agencyInfo.whatsapp}?text=Hi%20Digital%20Ads%20World,%20I'm%20interested%20in%20scaling%20my%20business.`;
+  const [agencyInfo, setAgencyInfo] = useState(defaultAgencyInfo);
+
+  useEffect(() => {
+    let active = true;
+    async function loadData() {
+      try {
+        const info = await siteDataManager.getAgencyInfo();
+        if (active && info) {
+          setAgencyInfo(info);
+        }
+      } catch (e) {
+        console.error("Error loading FloatingCTAs agencyInfo:", e);
+      }
+    }
+    loadData();
+    return () => { active = false; };
+  }, []);
+
+  const whatsappNumber = agencyInfo.floating_whatsapp || agencyInfo.whatsapp;
+  const whatsappUrl = `https://wa.me/91${whatsappNumber}?text=Hi%20Digital%20Ads%20World,%20I'm%20interested%20in%20scaling%20my%20business.`;
   const callUrl = `tel:${agencyInfo.phone}`;
 
   return (

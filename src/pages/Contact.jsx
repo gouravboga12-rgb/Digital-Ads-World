@@ -1,12 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Phone, Mail, MapPin, MessageCircle, Send, CheckCircle, Linkedin, Instagram, Facebook } from 'lucide-react';
-import { agencyInfo } from '../data/siteContent';
+import { agencyInfo as defaultAgencyInfo } from '../data/siteContent';
+import { siteDataManager } from '../data/siteDataManager';
 
 export default function Contact() {
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '', service: 'General Growth Consultation', message: '' });
+  const [agencyInfo, setAgencyInfo] = useState(defaultAgencyInfo);
+  const [formFields, setFormFields] = useState([]);
+  const [formData, setFormData] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    let active = true;
+    async function loadData() {
+      try {
+        const [info, fields] = await Promise.all([
+          siteDataManager.getAgencyInfo(),
+          siteDataManager.getContactFormFields()
+        ]);
+        if (active) {
+          if (info) setAgencyInfo(info);
+          if (fields) {
+            setFormFields(fields);
+            
+            // Initialize form keys
+            const initialForm = {};
+            fields.forEach(f => {
+              if (f.type === 'select') {
+                initialForm[f.name] = f.options && f.options.length > 0 ? f.options[0] : '';
+              } else {
+                initialForm[f.name] = '';
+              }
+            });
+            setFormData(initialForm);
+          }
+        }
+      } catch (e) {
+        console.error("Error loading contact agencyInfo / fields:", e);
+      }
+    }
+    loadData();
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     if (window.innerWidth < 1024) {
@@ -24,20 +60,37 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone || !formData.email) return;
+    
+    // Fallback if critical fields are missing, but HTML5 validation handles this
+    const name = formData.name || '';
+    const phone = formData.phone || '';
+    const email = formData.email || '';
+    const service = formData.service || 'General Growth Consultation';
+    
+    // Compile all other field values into message
+    let compiledMessage = '';
+    formFields.forEach(field => {
+      if (!['name', 'phone', 'email', 'service'].includes(field.name)) {
+        compiledMessage += `${field.label}: ${formData[field.name] || ''}\n`;
+      }
+    });
+
+    const payload = {
+      name,
+      email,
+      phone,
+      service,
+      message: compiledMessage
+    };
 
     try {
-      const response = await fetch('/api/leads', {
+      await siteDataManager.submitLead(payload);
+      fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (response.ok) {
-        setSubmitted(true);
-      } else {
-        // Fallback for offline review
-        setSubmitted(true);
-      }
+        body: JSON.stringify(payload)
+      }).catch(err => console.log('Mock server offline. Offline fallback active.'));
+      setSubmitted(true);
     } catch (err) {
       setSubmitted(true);
     }
@@ -159,73 +212,44 @@ export default function Contact() {
                       Send Us a Message
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
-                          Your Name <span className="text-rose-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          placeholder="e.g. John Doe"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
-                          Phone Number <span className="text-rose-500">*</span>
-                        </label>
-                        <input
-                          type="tel"
-                          required
-                          placeholder="e.g. 9876543210"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
-                          Email Address <span className="text-rose-500">*</span>
-                        </label>
-                        <input
-                          type="email"
-                          required
-                          placeholder="e.g. john@company.com"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Campaign Type</label>
-                        <select
-                          value={formData.service}
-                          onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                          className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
-                        >
-                          <option value="General Growth Consultation">General Growth Consultation</option>
-                          <option value="Google Search/Display Ads">Google Search/Display Ads</option>
-                          <option value="Meta Ads (FB/IG)">Meta Ads (FB/IG)</option>
-                          <option value="Search Engine Optimization">Search Engine Optimization</option>
-                          <option value="Landing Page & Development">Landing Page & Development</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Tell Us About Your Project</label>
-                      <textarea
-                        rows="4"
-                        placeholder="Detail your goals, monthly budgets, and timeline parameters..."
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm resize-none"
-                      ></textarea>
+                      {formFields.map(field => (
+                        <div key={field.name} className={`text-left ${field.type === 'textarea' ? 'sm:col-span-2' : ''}`}>
+                          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
+                            {field.label} {field.required && <span className="text-rose-500">*</span>}
+                          </label>
+                          
+                          {field.type === 'textarea' ? (
+                            <textarea
+                              rows="4"
+                              required={field.required}
+                              placeholder={field.placeholder}
+                              value={formData[field.name] || ''}
+                              onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+                              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm resize-none"
+                            ></textarea>
+                          ) : field.type === 'select' ? (
+                            <select
+                              required={field.required}
+                              value={formData[field.name] || ''}
+                              onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+                              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
+                            >
+                              {field.options && field.options.map((opt, i) => (
+                                <option key={i} value={opt}>{opt}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <input
+                              type={field.type || 'text'}
+                              required={field.required}
+                              placeholder={field.placeholder}
+                              value={formData[field.name] || ''}
+                              onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+                              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
+                            />
+                          )}
+                        </div>
+                      ))}
                     </div>
 
                     <button

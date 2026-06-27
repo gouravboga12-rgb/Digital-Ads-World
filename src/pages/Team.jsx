@@ -1,8 +1,19 @@
-import React from 'react';
-import { team } from '../data/siteContent';
+import React, { useState, useEffect } from 'react';
+import { team as defaultTeam } from '../data/siteContent';
+import { siteDataManager } from '../data/siteDataManager';
 import { Linkedin, Twitter } from 'lucide-react';
 
 export default function Team() {
+  const [team, setTeam] = useState(defaultTeam);
+
+  useEffect(() => {
+    let active = true;
+    siteDataManager.getTeam().then(data => {
+      if (active && data && data.length > 0) setTeam(data);
+    }).catch(() => {});
+    return () => { active = false; };
+  }, []);
+
   return (
     <div className="relative w-full overflow-hidden bg-white">
       
@@ -45,9 +56,22 @@ export default function Team() {
                     <h3 className="text-base font-bold text-premium-black font-heading leading-tight">{member.name}</h3>
                     <span className="text-[11px] font-black uppercase text-primary-blue tracking-wider">{member.designation}</span>
                   </div>
-                  <p className="text-slate-500 text-xs font-light leading-relaxed mt-1 line-clamp-3">
+                  <p className="text-slate-500 text-xs font-light leading-relaxed mt-1 line-clamp-4">
                     {member.bio}
                   </p>
+                  {/* Social links */}
+                  <div className="flex items-center gap-3 mt-auto pt-3 border-t border-slate-100">
+                    {member.social_links?.linkedin && (
+                      <a href={member.social_links.linkedin} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-primary-blue transition-colors">
+                        <Linkedin size={15} />
+                      </a>
+                    )}
+                    {member.social_links?.twitter && (
+                      <a href={member.social_links.twitter} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-primary-blue transition-colors">
+                        <Twitter size={15} />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

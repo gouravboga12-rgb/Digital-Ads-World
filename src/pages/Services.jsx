@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { services } from '../data/siteContent';
+import { services as defaultServices } from '../data/siteContent';
+import { siteDataManager } from '../data/siteDataManager';
 import * as LucideIcons from 'lucide-react';
 import { 
   ArrowRight, CheckCircle2, ChevronDown, ChevronUp,
@@ -8,7 +9,24 @@ import {
 } from 'lucide-react';
 
 export default function Services() {
+  const [services, setServices] = useState(defaultServices);
   const [expandedServiceId, setExpandedServiceId] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    async function loadData() {
+      try {
+        const s = await siteDataManager.getServices();
+        if (active && s) {
+          setServices(s);
+        }
+      } catch (e) {
+        console.error("Error loading dynamic services:", e);
+      }
+    }
+    loadData();
+    return () => { active = false; };
+  }, []);
 
   const toggleExpand = (id) => {
     setExpandedServiceId(prev => prev === id ? null : id);

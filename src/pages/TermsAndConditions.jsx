@@ -4,10 +4,70 @@ import {
   TrendingUp, UserCheck, Key, Lock, Globe, Search, Code, BarChart2, 
   RefreshCw, Ban, AlertOctagon, Scale, Mail, Phone, ChevronRight 
 } from 'lucide-react';
-import { agencyInfo } from '../data/siteContent';
+import { agencyInfo as defaultAgencyInfo } from '../data/siteContent';
+import { siteDataManager } from '../data/siteDataManager';
 
 export default function TermsAndConditions() {
   const [activeSection, setActiveSection] = useState('');
+  const [agencyInfo, setAgencyInfo] = useState(defaultAgencyInfo);
+  const [terms, setTerms] = useState([]);
+
+  useEffect(() => {
+    let active = true;
+    async function loadData() {
+      try {
+        const [info, t] = await Promise.all([
+          siteDataManager.getAgencyInfo(),
+          siteDataManager.getTermsAndConditions()
+        ]);
+        if (active) {
+          if (info) setAgencyInfo(info);
+          if (t) setTerms(t);
+        }
+      } catch (e) {
+        console.error("Error loading terms dynamic values:", e);
+      }
+    }
+    loadData();
+    return () => { active = false; };
+  }, []);
+
+  const getSectionContent = (id, fallback) => {
+    const match = terms.find(item => item.id === id);
+    return match ? match.content : fallback;
+  };
+
+  const parseMarkdownLinks = (text) => {
+    if (!text) return '';
+    const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push(text.substring(lastIndex, match.index));
+      }
+      parts.push(
+        <a 
+          key={match.index} 
+          href={match[2]} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-primary-blue hover:text-blue-700 underline font-bold"
+        >
+          {match[1]}
+        </a>
+      );
+      lastIndex = regex.lastIndex;
+    }
+
+    if (lastIndex < text.length) {
+      parts.push(text.substring(lastIndex));
+    }
+
+    return parts.length > 0 ? parts : text;
+  };
 
   const sections = [
     { id: 'acceptance', title: '1. Acceptance of Terms', icon: CheckCircle },
@@ -123,434 +183,150 @@ export default function TermsAndConditions() {
               </div>
             </aside>
 
-            {/* Right Scrollable Terms content */}
             <main className="col-span-1 lg:col-span-3 flex flex-col gap-8">
-              
-              {/* 1. Acceptance of Terms */}
-              <div 
-                id="acceptance" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <CheckCircle size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">1. Acceptance of Terms</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  By using our website or purchasing any service from Digital Ads World, you agree to be bound by these Terms & Conditions.
-                </p>
-              </div>
+              {sections.map((section) => {
+                const IconComponent = section.icon;
+                const content = getSectionContent(section.id, '');
+                const isContact = section.id === 'contact';
 
-              {/* 2. Our Services */}
-              <div 
-                id="services" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <Sparkles size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">2. Our Services</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light mb-6">
-                  Digital Ads World provides a comprehensive suite of digital marketing and technical solutions:
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {[
-                    "Google Ads Management",
-                    "Meta Ads Management",
-                    "Performance Marketing",
-                    "Search Engine Optimization (SEO)",
-                    "Google Business Profile Optimization",
-                    "Website Development",
-                    "Social Media Management",
-                    "Branding & Creative Design",
-                    "Graphic Designing",
-                    "Video Editing",
-                    "Influencer Marketing",
-                    "Lead Generation Consulting"
-                  ].map((service, index) => (
-                    <div key={index} className="flex items-center gap-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-100 hover:border-blue-100 hover:bg-blue-50/20 transition-all duration-300">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary-blue shrink-0" />
-                      <span className="text-sm font-semibold text-slate-700">{service}</span>
+                return (
+                  <div 
+                    key={section.id} 
+                    id={section.id} 
+                    className={isContact 
+                      ? "bg-gradient-to-br from-slate-900 to-deep-navy text-white rounded-3xl p-6 md:p-8 border border-slate-800 shadow-xl scroll-mt-28 text-left"
+                      : "bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow text-left"
+                    }
+                    data-aos="fade-up"
+                  >
+                    <div className={isContact ? "flex items-center gap-3 mb-6" : "flex items-center gap-3 mb-4"}>
+                      <div className={isContact 
+                        ? "w-10 h-10 rounded-2xl bg-primary-blue text-white flex items-center justify-center shrink-0"
+                        : "w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center shrink-0"
+                      }>
+                        <IconComponent size={20} />
+                      </div>
+                      <h2 className={isContact 
+                        ? "text-xl font-bold text-white font-heading"
+                        : "text-xl font-bold text-premium-black font-heading"
+                      }>{section.title}</h2>
                     </div>
-                  ))}
-                </div>
-              </div>
 
-              {/* 3. Service Agreement */}
-              <div 
-                id="agreement" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <FileText size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">3. Service Agreement</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  Every project begins only after receiving the agreed advance payment and confirmation from the client.
-                </p>
-              </div>
+                    <p className={isContact 
+                      ? "text-slate-300 leading-relaxed text-sm md:text-base font-light whitespace-pre-line"
+                      : "text-slate-600 leading-relaxed text-sm md:text-base font-light whitespace-pre-line"
+                    }>
+                      {parseMarkdownLinks(content)}
+                    </p>
 
-              {/* 4. Payment Terms */}
-              <div 
-                id="payment" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <CreditCard size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">4. Payment Terms</h2>
-                </div>
-                <ul className="space-y-3">
-                  {[
-                    "Advance payment is required before work begins.",
-                    "Remaining payments must be made as per the agreed schedule.",
-                    "Delayed payments may result in suspension of services."
-                  ].map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full bg-blue-50 text-primary-blue flex items-center justify-center shrink-0 mt-0.5">
-                        <span className="text-[10px] font-bold">{index + 1}</span>
+                    {/* Custom inline additions */}
+                    {section.id === 'services' && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-6">
+                        {[
+                          "Google Ads Management",
+                          "Meta Ads Management",
+                          "Performance Marketing",
+                          "Search Engine Optimization (SEO)",
+                          "Google Business Profile Optimization",
+                          "Website Development",
+                          "Social Media Management",
+                          "Branding & Creative Design",
+                          "Graphic Designing",
+                          "Video Editing",
+                          "Influencer Marketing",
+                          "Lead Generation Consulting"
+                        ].map((srv, index) => (
+                          <div key={index} className="flex items-center gap-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-100 hover:border-blue-100 hover:bg-blue-50/20 transition-all duration-300">
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary-blue shrink-0" />
+                            <span className="text-sm font-semibold text-slate-700">{srv}</span>
+                          </div>
+                        ))}
                       </div>
-                      <span className="text-slate-600 text-sm md:text-base font-light leading-relaxed">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                    )}
 
-              {/* 5. Advertising Budget */}
-              <div 
-                id="budget" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <DollarSign size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">5. Advertising Budget</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  Advertising spend for Google Ads, Meta Ads, or any third-party platform is separate from the agency management fee unless otherwise agreed in writing.
-                </p>
-              </div>
+                    {section.id === 'payment' && (
+                      <ul className="space-y-3 mt-6">
+                        {[
+                          "Advance payment is required before work begins.",
+                          "Remaining payments must be made as per the agreed schedule.",
+                          "Delayed payments may result in suspension of services."
+                        ].map((item, index) => (
+                          <li key={index} className="flex items-start gap-3">
+                            <div className="w-5 h-5 rounded-full bg-blue-50 text-primary-blue flex items-center justify-center shrink-0 mt-0.5">
+                              <span className="text-[10px] font-bold">{index + 1}</span>
+                            </div>
+                            <span className="text-slate-600 text-sm md:text-base font-light leading-relaxed">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
 
-              {/* 6. Campaign Performance */}
-              <div 
-                id="performance" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <TrendingUp size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">6. Campaign Performance</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light mb-4">
-                  We continuously optimize campaigns to achieve the best possible results. However, results such as leads, conversions, sales, rankings, or revenue depend on factors including market demand, competition, audience behaviour, platform algorithms, landing page quality, business offerings, and follow-up.
-                </p>
-                <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-100 flex gap-3">
-                  <div className="w-5 h-5 rounded-full bg-primary-blue text-white flex items-center justify-center shrink-0 text-xs font-bold font-heading mt-0.5">i</div>
-                  <p className="text-xs md:text-sm font-semibold text-slate-700 leading-relaxed">
-                    Therefore, specific outcomes cannot be guaranteed.
-                  </p>
-                </div>
-              </div>
-
-              {/* 7. Client Responsibilities */}
-              <div 
-                id="responsibilities" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <UserCheck size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">7. Client Responsibilities</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light mb-4">
-                  To ensure successful campaign operations, the client agrees to:
-                </p>
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-                  {[
-                    "Provide accurate business information.",
-                    "Approve creatives and campaigns promptly.",
-                    "Provide timely access to required accounts.",
-                    "Respond promptly to generated leads."
-                  ].map((responsibility, index) => (
-                    <li key={index} className="flex gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-100 items-start">
-                      <CheckCircle size={16} className="text-green-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-700 text-sm font-medium">{responsibility}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* 8. Intellectual Property */}
-              <div 
-                id="ip" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <Key size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">8. Intellectual Property</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  All logos, trademarks, content, and materials provided by the client remain the client's property. Marketing strategies, reports, and original creative work produced by Digital Ads World remain our intellectual property unless otherwise agreed.
-                </p>
-              </div>
-
-              {/* 9. Confidentiality */}
-              <div 
-                id="confidentiality" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <Lock size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">9. Confidentiality</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  All client information, campaign data, business strategies, and account credentials will be treated as confidential.
-                </p>
-              </div>
-
-              {/* 10. Third-Party Platforms */}
-              <div 
-                id="platforms" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <Globe size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">10. Third-Party Platforms</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  Campaigns are subject to the policies of Google, Meta, LinkedIn, YouTube, and other advertising platforms. We are not responsible for account suspensions, policy violations, or platform changes beyond our control.
-                </p>
-              </div>
-
-              {/* 11. SEO Disclaimer */}
-              <div 
-                id="seo" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <Search size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">11. SEO Disclaimer</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  Search engine rankings depend on numerous external factors. While we follow industry best practices, first-page rankings or specific positions cannot be guaranteed.
-                </p>
-              </div>
-
-              {/* 12. Website Development */}
-              <div 
-                id="webdev" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <Code size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">12. Website Development</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  Website delivery timelines depend on timely content, approvals, and client communication. Additional revisions beyond the agreed scope may incur additional charges.
-                </p>
-              </div>
-
-              {/* 13. Reporting */}
-              <div 
-                id="reporting" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <BarChart2 size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">13. Reporting</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  Campaign reports will be shared according to the agreed reporting schedule.
-                </p>
-              </div>
-
-              {/* 14. Refund Policy */}
-              <div 
-                id="refund" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-red-200/80 bg-red-50/10 shadow-sm scroll-mt-28 hover:shadow-md transition-all duration-300"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center">
-                    <RefreshCw size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">14. Refund Policy</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  Management fees, consultation fees, setup charges, and advertising spend already utilized are non-refundable once work has commenced.
-                </p>
-              </div>
-
-              {/* 15. Cancellation Policy */}
-              <div 
-                id="cancellation" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <Ban size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">15. Cancellation Policy</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  Either party may terminate services by providing written notice. Outstanding dues remain payable for work completed up to the termination date.
-                </p>
-              </div>
-
-              {/* 16. Limitation of Liability */}
-              <div 
-                id="liability" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-amber-200/80 bg-amber-50/10 shadow-sm scroll-mt-28 hover:shadow-md transition-all duration-300"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center">
-                    <AlertOctagon size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">16. Limitation of Liability</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  Digital Ads World shall not be liable for indirect or consequential losses, including revenue loss, account restrictions, or service interruptions caused by third-party platforms or events beyond our reasonable control.
-                </p>
-              </div>
-
-              {/* 17. Privacy */}
-              <div 
-                id="privacy" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <Shield size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">17. Privacy</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  Client information is handled in accordance with our Privacy Policy and is never sold to third parties.
-                </p>
-              </div>
-
-              {/* 18. Modifications */}
-              <div 
-                id="modifications" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <FileText size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">18. Modifications</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  Digital Ads World reserves the right to update these Terms & Conditions at any time. Updated versions will be published on our website.
-                </p>
-              </div>
-
-              {/* 19. Governing Law */}
-              <div 
-                id="law" 
-                className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm scroll-mt-28 hover:shadow-md transition-shadow"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-primary-blue flex items-center justify-center">
-                    <Scale size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-premium-black font-heading">19. Governing Law</h2>
-                </div>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base font-light">
-                  These Terms & Conditions shall be governed by and interpreted in accordance with the laws of India. Any disputes shall be subject to the jurisdiction of the competent courts in Hyderabad, Telangana.
-                </p>
-              </div>
-
-              {/* 20. Contact Us */}
-              <div 
-                id="contact" 
-                className="bg-gradient-to-br from-slate-900 to-deep-navy text-white rounded-3xl p-6 md:p-8 border border-slate-800 shadow-xl scroll-mt-28"
-                data-aos="fade-up"
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-2xl bg-primary-blue text-white flex items-center justify-center">
-                    <Mail size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-white font-heading">20. Contact Us</h2>
-                </div>
-                
-                <div className="flex flex-col gap-6">
-                  <div className="border-l-4 border-primary-blue pl-4 py-1">
-                    <h3 className="text-lg font-bold text-white font-heading">{agencyInfo.name}</h3>
-                    <p className="text-slate-400 text-xs uppercase tracking-wider font-semibold">Founder & CEO: K CHARAN</p>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                    <a 
-                      href={`tel:+919381723378`} 
-                      className="flex items-center gap-3 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary-blue/30 transition-all duration-300 group"
-                    >
-                      <div className="w-8 h-8 rounded-xl bg-primary-blue/20 text-primary-blue flex items-center justify-center shrink-0">
-                        <Phone size={16} />
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Call Us</p>
-                        <p className="text-sm font-semibold text-white group-hover:text-primary-blue transition-colors">+91 9381723378</p>
-                      </div>
-                    </a>
-                    
-                    <a 
-                      href={`mailto:${agencyInfo.email}`} 
-                      className="flex items-center gap-3 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary-blue/30 transition-all duration-300 group"
-                    >
-                      <div className="w-8 h-8 rounded-xl bg-primary-blue/20 text-primary-blue flex items-center justify-center shrink-0">
-                        <Mail size={16} />
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Email Us</p>
-                        <p className="text-sm font-semibold text-white group-hover:text-primary-blue transition-colors truncate max-w-[200px]">
-                          {agencyInfo.email}
+                    {section.id === 'performance' && (
+                      <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-100 flex gap-3 mt-4">
+                        <div className="w-5 h-5 rounded-full bg-primary-blue text-white flex items-center justify-center shrink-0 text-xs font-bold font-heading mt-0.5">i</div>
+                        <p className="text-xs md:text-sm font-semibold text-slate-700 leading-relaxed">
+                          Therefore, specific outcomes cannot be guaranteed.
                         </p>
                       </div>
-                    </a>
-                  </div>
-                </div>
-              </div>
+                    )}
 
+                    {section.id === 'responsibilities' && (
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-6">
+                        {[
+                          "Provide accurate business information.",
+                          "Approve creatives and campaigns promptly.",
+                          "Provide timely access to required accounts.",
+                          "Respond promptly to generated leads."
+                        ].map((responsibility, index) => (
+                          <li key={index} className="flex gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-100 items-start">
+                            <CheckCircle size={16} className="text-green-500 shrink-0 mt-0.5" />
+                            <span className="text-slate-700 text-sm font-medium">{responsibility}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {section.id === 'contact' && (
+                      <div className="flex flex-col gap-6 mt-6">
+                        <div className="border-l-4 border-primary-blue pl-4 py-1">
+                          <h3 className="text-lg font-bold text-white font-heading">{agencyInfo.name}</h3>
+                          <p className="text-slate-400 text-xs uppercase tracking-wider font-semibold">Founder & CEO: K CHARAN</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                          <a 
+                            href={`tel:+91${agencyInfo.phone}`} 
+                            className="flex items-center gap-3 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary-blue/30 transition-all duration-300 group"
+                          >
+                            <div className="w-8 h-8 rounded-xl bg-primary-blue/20 text-primary-blue flex items-center justify-center shrink-0">
+                              <Phone size={16} />
+                            </div>
+                            <div>
+                              <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Call Us</p>
+                              <p className="text-sm font-semibold text-white group-hover:text-primary-blue transition-colors">+91 {agencyInfo.phone}</p>
+                            </div>
+                          </a>
+
+                          <a 
+                            href={`mailto:${agencyInfo.email}`} 
+                            className="flex items-center gap-3 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary-blue/30 transition-all duration-300 group"
+                          >
+                            <div className="w-8 h-8 rounded-xl bg-primary-blue/20 text-primary-blue flex items-center justify-center shrink-0">
+                              <Mail size={16} />
+                            </div>
+                            <div>
+                              <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Email Us</p>
+                              <p className="text-sm font-semibold text-white group-hover:text-primary-blue transition-colors truncate max-w-[200px]">
+                                {agencyInfo.email}
+                              </p>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </main>
           </div>
         </div>

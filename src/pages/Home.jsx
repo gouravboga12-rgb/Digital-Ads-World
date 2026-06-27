@@ -12,44 +12,21 @@ import {
 } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { 
-  agencyInfo, services, testimonials, 
-  faqs, gallery, team 
+  services as defaultServices, 
+  testimonials as defaultTestimonials, 
+  gallery as defaultGallery, 
+  team as defaultTeam, 
+  agencyInfo as defaultAgencyInfo, 
+  defaultBrands,
+  faqs as defaultFaqsContent
 } from '../data/siteContent';
+import { siteDataManager } from '../data/siteDataManager';
+import { useEffect } from 'react';
 import Lightbox from '../components/Lightbox';
 import profitableConversionsImg from '../assets/profitable_conversions.png';
 import marketingTeamImg from '../assets/marketing_team.png';
 
-// Import new brand logos
-import brand25 from '../assets/brand_25.png';
-import brand26 from '../assets/brand_26.png';
-import brand27 from '../assets/brand_27.png';
-import brand28 from '../assets/brand_28.png';
-import brand29 from '../assets/brand_29.png';
-import brand30 from '../assets/brand_30.png';
-import brand31 from '../assets/brand_31.png';
-import brand32 from '../assets/brand_32.png';
-import brand33 from '../assets/brand_33.png';
-import brand34 from '../assets/brand_34.png';
-import brand35 from '../assets/brand_35.png';
-import brand36 from '../assets/brand_36.png';
-import brand37 from '../assets/brand_37.png';
 
-// Brand logos for Trusted section
-const brandLogos = [
-  { name: "Brand 25", logo: brand25 },
-  { name: "Brand 26", logo: brand26 },
-  { name: "Brand 27", logo: brand27 },
-  { name: "Brand 28", logo: brand28 },
-  { name: "Brand 29", logo: brand29 },
-  { name: "Brand 30", logo: brand30 },
-  { name: "Brand 31", logo: brand31 },
-  { name: "Brand 32", logo: brand32 },
-  { name: "Brand 33", logo: brand33 },
-  { name: "Brand 34", logo: brand34 },
-  { name: "Brand 35", logo: brand35 },
-  { name: "Brand 36", logo: brand36 },
-  { name: "Brand 37", logo: brand37 },
-];
 
 // Interactive Process flows
 const processTabs = {
@@ -85,23 +62,32 @@ const processTabs = {
   }
 };
 
-// Industries We Serve
-const industries = [
-  { title: "Healthcare", desc: "Hospitals • Clinics • Pharma", icon: "Activity", color: "bg-red-50 text-red-500 border-red-100" },
-  { title: "Education & EdTech", desc: "Schools • Universities • LMS", icon: "GraduationCap", color: "bg-blue-50 text-blue-500 border-blue-100" },
-  { title: "IT & ITES", desc: "Software • SaaS • Services", icon: "Laptop", color: "bg-indigo-50 text-indigo-500 border-indigo-100" },
-  { title: "Real Estate", desc: "Builders • Developers • Plots", icon: "HomeIcon", color: "bg-amber-50 text-amber-500 border-amber-100" },
-  { title: "Fintech & Banking", desc: "Insurance • Trading • NBFC", icon: "DollarSign", color: "bg-green-50 text-green-500 border-green-100" },
-  { title: "Solar Energy", desc: "Panels • Installation • EPC", icon: "Sun", color: "bg-yellow-50 text-yellow-600 border-yellow-100" },
-  { title: "E-Commerce & D2C", desc: "Marketplace • Retail • Shopify", icon: "ShoppingCart", color: "bg-cyan-50 text-cyan-500 border-cyan-100" },
-  { title: "Manufacturing", desc: "Industrial • B2B • Export", icon: "Factory", color: "bg-slate-50 text-slate-600 border-slate-200" },
-  { title: "Fashion & Beauty", desc: "Brands • Salons • D2C", icon: "ShoppingBag", color: "bg-pink-50 text-pink-500 border-pink-100" },
-  { title: "NGOs & Social Impact", desc: "Donations • Awareness", icon: "Heart", color: "bg-rose-50 text-rose-500 border-rose-100" },
-  { title: "Entertainment", desc: "Media • Events • OTT", icon: "Video", color: "bg-purple-50 text-purple-500 border-purple-100" },
-  { title: "Human Resources", desc: "Recruitment • Staffing • HR Tech", icon: "Users", color: "bg-teal-50 text-teal-500 border-teal-100" }
-];
+
+
 
 export default function Home() {
+  const [agencyInfo, setAgencyInfo] = useState(defaultAgencyInfo);
+  const [services, setServices] = useState(defaultServices);
+  const [testimonials, setTestimonials] = useState(defaultTestimonials);
+  const [faqs, setFaqs] = useState(defaultFaqsContent);
+  const [gallery, setGallery] = useState(defaultGallery);
+  const [team, setTeam] = useState(defaultTeam);
+  const [brandLogos, setBrandLogos] = useState(defaultBrands);
+  const [industries, setIndustries] = useState([
+    { id: 'i1', title: 'Healthcare', desc: 'Hospitals • Clinics • Pharma', icon: 'Activity', color: 'bg-red-50 text-red-500 border-red-100' },
+    { id: 'i2', title: 'Education & EdTech', desc: 'Schools • Universities • LMS', icon: 'GraduationCap', color: 'bg-blue-50 text-blue-500 border-blue-100' },
+    { id: 'i3', title: 'IT & ITES', desc: 'Software • SaaS • Services', icon: 'Laptop', color: 'bg-indigo-50 text-indigo-500 border-indigo-100' },
+    { id: 'i4', title: 'Real Estate', desc: 'Builders • Developers • Plots', icon: 'HomeIcon', color: 'bg-amber-50 text-amber-500 border-amber-100' },
+    { id: 'i5', title: 'Fintech & Banking', desc: 'Insurance • Trading • NBFC', icon: 'DollarSign', color: 'bg-green-50 text-green-500 border-green-100' },
+    { id: 'i6', title: 'Solar Energy', desc: 'Panels • Installation • EPC', icon: 'Sun', color: 'bg-yellow-50 text-yellow-600 border-yellow-100' },
+    { id: 'i7', title: 'E-Commerce & D2C', desc: 'Marketplace • Retail • Shopify', icon: 'ShoppingCart', color: 'bg-cyan-50 text-cyan-500 border-cyan-100' },
+    { id: 'i8', title: 'Manufacturing', desc: 'Industrial • B2B • Export', icon: 'Factory', color: 'bg-slate-50 text-slate-600 border-slate-200' },
+    { id: 'i9', title: 'Fashion & Beauty', desc: 'Brands • Salons • D2C', icon: 'ShoppingBag', color: 'bg-pink-50 text-pink-500 border-pink-100' },
+    { id: 'i10', title: 'NGOs & Social Impact', desc: 'Donations • Awareness', icon: 'Heart', color: 'bg-rose-50 text-rose-500 border-rose-100' },
+    { id: 'i11', title: 'Entertainment', desc: 'Media • Events • OTT', icon: 'Video', color: 'bg-purple-50 text-purple-500 border-purple-100' },
+    { id: 'i12', title: 'Human Resources', desc: 'Recruitment • Staffing • HR Tech', icon: 'Users', color: 'bg-teal-50 text-teal-500 border-teal-100' }
+  ]);
+
   const [activeFaq, setActiveFaq] = useState(null);
   const [leadForm, setLeadForm] = useState({ name: '', email: '', phone: '', service: 'General Growth Inquiry', message: '' });
   const [submitted, setSubmitted] = useState(false);
@@ -109,6 +95,38 @@ export default function Home() {
   const [activeGalleryFilter, setActiveGalleryFilter] = useState('all');
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [expandedServiceId, setExpandedServiceId] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    async function loadData() {
+      try {
+        const [info, s, t, test, gal, brandsData, industriesData, faqsData] = await Promise.all([
+          siteDataManager.getAgencyInfo(),
+          siteDataManager.getServices(),
+          siteDataManager.getTeam(),
+          siteDataManager.getTestimonials(),
+          siteDataManager.getGallery(),
+          siteDataManager.getBrands(),
+          siteDataManager.getIndustries(),
+          siteDataManager.getFaqs()
+        ]);
+        if (active) {
+          if (info) setAgencyInfo(info);
+          if (s) setServices(s);
+          if (t) setTeam(t);
+          if (test) setTestimonials(test);
+          if (gal) setGallery(gal);
+          if (brandsData) setBrandLogos(brandsData);
+          if (industriesData && industriesData.length > 0) setIndustries(industriesData);
+          if (faqsData && faqsData.length > 0) setFaqs(faqsData);
+        }
+      } catch (e) {
+        console.error("Error loading home page dynamic content:", e);
+      }
+    }
+    loadData();
+    return () => { active = false; };
+  }, []);
 
   const toggleExpand = (id) => {
     setExpandedServiceId(prev => prev === id ? null : id);
@@ -166,6 +184,11 @@ export default function Home() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!leadForm.name || !leadForm.phone) return;
+    try {
+      await siteDataManager.submitLead(leadForm);
+    } catch (err) {
+      console.error(err);
+    }
     setSubmitted(true);
   };
 
@@ -182,16 +205,16 @@ export default function Home() {
               <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-1.5 w-fit">
                 <span className="w-2 h-2 rounded-full bg-primary-blue animate-ping"></span>
                 <span className="text-xs font-black tracking-wider uppercase text-primary-blue">
-                  Leading Performance Marketing Agency
+                  {agencyInfo.hero_badge || "Leading Performance Marketing Agency"}
                 </span>
               </div>
               
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight tracking-tight text-premium-black font-heading">
-                Scale Your Business With <span className="text-primary-blue">Performance-Driven</span> Digital Marketing
+                {agencyInfo.hero_title || "Scale Your Business With Performance-Driven Digital Marketing"}
               </h1>
               
               <p className="text-slate-500 text-base sm:text-lg leading-relaxed max-w-2xl font-light">
-                Google Ads, Meta Ads, SEO, Social Media Marketing, Branding & Website Development Solutions designed to generate verified leads and drive explosive revenue growth.
+                {agencyInfo.hero_subtitle || "Google Ads, Meta Ads, SEO, Social Media Marketing, Branding & Website Development Solutions designed to generate verified leads and drive explosive revenue growth."}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 mt-4">
@@ -199,14 +222,14 @@ export default function Home() {
                   href="#contact-section"
                   className="bg-primary-blue hover:bg-blue-700 text-white font-bold px-8 py-4 rounded-2xl flex items-center justify-center gap-2 transition-all duration-300 shadow-xl shadow-blue-500/20 hover:-translate-y-0.5 text-base"
                 >
-                  <span>Get Free Consultation</span>
+                  <span>{agencyInfo.hero_cta_text || "Get Free Consultation"}</span>
                   <ArrowRight size={18} />
                 </a>
                 <Link
                   to="/services"
                   className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 font-bold px-8 py-4 rounded-2xl flex items-center justify-center gap-2 transition-all duration-300 text-base shadow-sm hover:shadow"
                 >
-                  <span>View All Services</span>
+                  <span>{agencyInfo.hero_secondary_cta_text || "View All Services"}</span>
                 </Link>
               </div>
 
@@ -236,23 +259,24 @@ export default function Home() {
             <div className="lg:col-span-5" data-aos="fade-left">
               <div className="relative p-2 rounded-3xl overflow-hidden border border-slate-200/60 shadow-2xl bg-white/85 backdrop-blur-md">
                 <img
-                  src={marketingTeamImg}
+                  src={agencyInfo.hero_image_url || marketingTeamImg}
                   alt="Team Working"
                   className="rounded-2xl w-full h-[320px] object-cover"
                 />
                 <div className="grid grid-cols-3 gap-4 pt-6 pb-2 border-t border-slate-100 mt-4 text-center">
-                  <div>
-                    <h4 className="text-xl sm:text-2xl font-black text-primary-blue">50+</h4>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Happy Clients</p>
-                  </div>
-                  <div>
-                    <h4 className="text-xl sm:text-2xl font-black text-primary-blue">500+</h4>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Projects</p>
-                  </div>
-                  <div>
-                    <h4 className="text-xl sm:text-2xl font-black text-primary-blue">4+ Yrs</h4>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Industry Exp</p>
-                  </div>
+                  {(agencyInfo.hero_stats && agencyInfo.hero_stats.length > 0
+                    ? agencyInfo.hero_stats
+                    : [
+                        { value: '50+', label: 'Happy Clients' },
+                        { value: '500+', label: 'Projects' },
+                        { value: '4+ Yrs', label: 'Industry Exp' }
+                      ]
+                  ).slice(0, 3).map((st, i) => (
+                    <div key={i}>
+                      <h4 className="text-xl sm:text-2xl font-black text-primary-blue">{st.value}</h4>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{st.label}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -296,27 +320,22 @@ export default function Home() {
           {/* Dark Stats Banner */}
           <div className="bg-slate-900 text-white rounded-[32px] p-8 md:p-12 border border-slate-800 shadow-xl relative overflow-hidden text-center mt-6">
             <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12 relative z-10">
-              <div data-aos="zoom-in" data-aos-delay="100">
-                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">50+</h3>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Happy Clients</p>
-              </div>
-              <div data-aos="zoom-in" data-aos-delay="200">
-                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">500+</h3>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Projects Delivered</p>
-              </div>
-              <div data-aos="zoom-in" data-aos-delay="300">
-                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">4 Years</h3>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Industry Experience</p>
-              </div>
-              <div data-aos="zoom-in" data-aos-delay="400">
-                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">1 Cr +</h3>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Ad Budget Managed</p>
-              </div>
-              <div className="col-span-2 lg:col-span-1" data-aos="zoom-in" data-aos-delay="500">
-                <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">10+</h3>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">Professional Team</p>
-              </div>
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12 relative z-10 justify-center">
+              {(agencyInfo.hero_stats && agencyInfo.hero_stats.length > 0
+                ? agencyInfo.hero_stats
+                : [
+                    { value: "50+", label: "Happy Clients" },
+                    { value: "500+", label: "Projects Delivered" },
+                    { value: "4 Years", label: "Industry Experience" },
+                    { value: "1 Cr +", label: "Ad Budget Managed" },
+                    { value: "10+", label: "Professional Team" }
+                  ]
+              ).map((st, i) => (
+                <div key={i} data-aos="zoom-in" data-aos-delay={(i + 1) * 100} className={i === 4 ? "col-span-2 lg:col-span-1" : ""}>
+                  <h3 className="text-3xl sm:text-4xl font-black text-primary-blue font-heading">{st.value}</h3>
+                  <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-2">{st.label}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -402,36 +421,23 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-left">
-            {[
-              {
-                title: "Absolute ROI Focus",
-                description: "We align all marketing strategies with actual sales revenue and cashflow, rather than clicks or branding impressions.",
-                icon: Target
-              },
-              {
-                title: "Data Transparency",
-                description: "No hidden spreadsheets. Our partners see live conversion data routed directly from platforms like Google Ads and Meta Pixel.",
-                icon: BarChart3
-              },
-              {
-                title: "High Integrity",
-                description: "We are selective about partnerships. If we believe a product is not ready to scale, we state it transparently.",
-                icon: ShieldCheck
-              },
-              {
-                title: "Creative Innovation",
-                description: "Dynamic ad creative styles are changed consistently to combat audience fatigue and reduce conversion prices.",
-                icon: Zap
-              }
-            ].map((value, i) => {
-              const IconComp = value.icon;
+            {(agencyInfo.values && agencyInfo.values.length > 0
+              ? agencyInfo.values
+              : [
+                  { title: "Absolute ROI Focus", description: "We align all marketing strategies with actual sales revenue and cashflow, rather than clicks or branding impressions.", icon: "Target" },
+                  { title: "Data Transparency", description: "No hidden spreadsheets. Our partners see live conversion data routed directly from platforms like Google Ads and Meta Pixel.", icon: "BarChart3" },
+                  { title: "High Integrity", description: "We are selective about partnerships. If we believe a product is not ready to scale, we state it transparently.", icon: "ShieldCheck" },
+                  { title: "Creative Innovation", description: "Dynamic ad creative styles are changed consistently to combat audience fatigue and reduce conversion prices.", icon: "Zap" }
+                ]
+            ).map((val, i) => {
+              const IconComp = LucideIcons[val.icon] || Zap;
               return (
                 <div key={i} className="flex flex-col gap-4 p-4" data-aos="fade-up" data-aos-delay={i * 50}>
                   <div className="w-10 h-10 rounded-xl bg-blue-50 text-primary-blue flex items-center justify-center">
                     <IconComp size={20} />
                   </div>
-                  <h4 className="text-base font-bold text-premium-black font-heading">{value.title}</h4>
-                  <p className="text-slate-500 text-xs sm:text-sm font-light leading-relaxed">{value.description}</p>
+                  <h4 className="text-base font-bold text-premium-black font-heading">{val.title}</h4>
+                  <p className="text-slate-500 text-xs sm:text-sm font-light leading-relaxed">{val.description}</p>
                 </div>
               );
             })}
@@ -450,17 +456,20 @@ export default function Home() {
           </div>
 
           <div className="relative border-l border-slate-200 ml-4 md:ml-32 md:mr-32 text-left">
-            {[
-              { year: "2023", title: "The Inception", desc: "Digital Ads World was founded in Hyderabad by K Charan with a single goal: driving performance-first results." },
-              { year: "2024", title: "Scaling Up", desc: "G Sri Ram joined to spearhead Digital Marketing, expanding ad management capacity by 300%." },
-              { year: "2025", title: "Global Client Base", desc: "Serviced over 50+ clients globally, managing over $2.4 Million in cumulative ad spend." },
-              { year: "2026", title: "Dynamic Lead Systems", desc: "Launched automated conversation funnels integrating client databases with immediate WhatsApp routing." }
-            ].map((item, index) => (
+            {(agencyInfo?.journey && agencyInfo.journey.length > 0
+              ? agencyInfo.journey
+              : [
+                  { year: "2023", title: "The Inception", desc: "Digital Ads World was founded in Hyderabad by K Charan with a single goal: driving performance-first results." },
+                  { year: "2024", title: "Scaling Up", desc: "G Sri Ram joined to spearhead Digital Marketing, expanding ad management capacity by 300%." },
+                  { year: "2025", title: "Global Client Base", desc: "Serviced over 50+ clients globally, managing over $2.4 Million in cumulative ad spend." },
+                  { year: "2026", title: "Dynamic Lead Systems", desc: "Launched automated conversation funnels integrating client databases with immediate WhatsApp routing." }
+                ]
+            ).map((item, index) => (
               <div key={index} className="mb-12 ml-6 relative" data-aos="fade-up">
                 <div className="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-primary-blue border-4 border-white shadow-sm"></div>
                 <span className="text-xs font-black text-primary-blue">{item.year}</span>
                 <h3 className="text-lg font-bold text-premium-black font-heading mt-1">{item.title}</h3>
-                <p className="text-slate-500 text-xs sm:text-sm font-light mt-1.5 leading-relaxed max-w-2xl">{item.desc}</p>
+                <p className="text-slate-500 text-xs sm:text-sm font-light mt-1.5 leading-relaxed max-w-2xl">{item.desc || item.description}</p>
               </div>
             ))}
           </div>
@@ -551,65 +560,76 @@ export default function Home() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="text-xs font-black tracking-widest text-primary-blue uppercase">
-            How Leads Flow
+            {agencyInfo?.process_tag || "How Leads Flow"}
           </span>
           <h2 className="text-3xl md:text-4xl font-black mt-3 mb-4 tracking-tight text-premium-black font-heading">
-            Our Digital Marketing Process — Click To Conversion
+            {agencyInfo?.process_title || "Our Digital Marketing Process — Click To Conversion"}
           </h2>
           <p className="text-slate-500 max-w-xl mx-auto mb-12 text-sm font-light">
-            Our end-to-end lead generation engine — from demand creation to closed deals.
+            {agencyInfo?.process_subtitle || "Our end-to-end lead generation engine — from demand creation to closed deals."}
           </p>
 
-          <div className="flex justify-center gap-4 mb-12 flex-wrap">
-            {Object.keys(processTabs).map((key) => (
-              <button
-                key={key}
-                onClick={() => setActiveProcessTab(key)}
-                className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
-                  activeProcessTab === key 
-                    ? 'bg-primary-blue text-white shadow-lg shadow-blue-500/15' 
-                    : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
-                }`}
-              >
-                {processTabs[key].label}
-              </button>
-            ))}
-          </div>
+          {(() => {
+            const currentTabs = agencyInfo?.process_flow || processTabs;
+            const tabKeys = Object.keys(currentTabs);
+            const currentActiveKey = tabKeys.includes(activeProcessTab) ? activeProcessTab : (tabKeys[0] || 'b2c');
+            const activeTabInfo = currentTabs[currentActiveKey] || { label: '', columns: [] };
 
-          <div className="flex flex-col lg:flex-row items-stretch justify-between gap-4 lg:gap-2 bg-slate-50/50 p-6 md:p-8 rounded-[36px] border border-slate-100/50">
-            {processTabs[activeProcessTab].columns.map((column, cIdx) => (
-              <React.Fragment key={cIdx}>
-                <div className="flex-1 flex flex-col gap-3 bg-white rounded-3xl p-5 border border-slate-100 shadow-sm relative text-left">
-                  <span className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-2 block text-center">
-                    {column.title}
-                  </span>
-                  <div className="flex flex-col gap-2 flex-grow justify-center animate-fade-in">
-                    {column.items.map((item, iIdx) => {
-                      const isDealWon = item === "DEAL WON 🎉";
-                      return (
-                        <div
-                          key={iIdx}
-                          className={`px-3 py-2.5 rounded-xl border text-xs font-bold text-center transition-all ${
-                            isDealWon
-                              ? 'bg-gradient-to-r from-orange-500 to-amber-500 border-orange-400 text-white shadow-lg shadow-orange-500/25 scale-105 font-black'
-                              : 'bg-slate-50 border-slate-100 text-slate-700 hover:border-blue-300 hover:text-primary-blue hover:bg-white shadow-sm'
-                          }`}
-                        >
-                          {item}
-                        </div>
-                      );
-                    })}
-                  </div>
+            return (
+              <>
+                <div className="flex justify-center gap-4 mb-12 flex-wrap">
+                  {tabKeys.map((key) => (
+                    <button
+                      key={key}
+                      onClick={() => setActiveProcessTab(key)}
+                      className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
+                        currentActiveKey === key 
+                          ? 'bg-primary-blue text-white shadow-lg shadow-blue-500/15' 
+                          : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                      }`}
+                    >
+                      {currentTabs[key].label}
+                    </button>
+                  ))}
                 </div>
-                {cIdx < processTabs[activeProcessTab].columns.length - 1 && (
-                  <div className="flex items-center justify-center py-2 lg:py-0 lg:px-1 text-slate-300 select-none">
-                    <ArrowRight size={20} className="hidden lg:block animate-pulse" />
-                    <ArrowRight size={20} className="block lg:hidden rotate-90" />
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
+
+                <div className="flex flex-col lg:flex-row items-stretch justify-between gap-4 lg:gap-2 bg-slate-50/50 p-6 md:p-8 rounded-[36px] border border-slate-100/50">
+                  {activeTabInfo.columns?.map((column, cIdx) => (
+                    <React.Fragment key={cIdx}>
+                      <div className="flex-1 flex flex-col gap-3 bg-white rounded-3xl p-5 border border-slate-100 shadow-sm relative text-left">
+                        <span className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-2 block text-center">
+                          {column.title}
+                        </span>
+                        <div className="flex flex-col gap-2 flex-grow justify-center animate-fade-in">
+                          {column.items?.map((item, iIdx) => {
+                            const isDealWon = item.toUpperCase().includes("DEAL WON") || item.includes("🎉");
+                            return (
+                              <div
+                                key={iIdx}
+                                className={`px-3 py-2.5 rounded-xl border text-xs font-bold text-center transition-all ${
+                                  isDealWon
+                                    ? 'bg-gradient-to-r from-orange-500 to-amber-500 border-orange-400 text-white shadow-lg shadow-orange-500/25 scale-105 font-black'
+                                    : 'bg-slate-50 border-slate-100 text-slate-700 hover:border-blue-300 hover:text-primary-blue hover:bg-white shadow-sm'
+                                }`}
+                              >
+                                {item}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      {cIdx < activeTabInfo.columns.length - 1 && (
+                        <div className="flex items-center justify-center py-2 lg:py-0 lg:px-1 text-slate-300 select-none">
+                          <ArrowRight size={20} className="hidden lg:block animate-pulse" />
+                          <ArrowRight size={20} className="block lg:hidden rotate-90" />
+                        </div>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </>
+            );
+          })()}
         </div>
       </section>
 
@@ -657,7 +677,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredGalleryItems.map((item, index) => (
+            {filteredGalleryItems.slice(0, 6).map((item, index) => (
               <div
                 key={item.id}
                 onClick={() => setLightboxIndex(index)}
@@ -689,6 +709,17 @@ export default function Home() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* View All Projects Button */}
+          <div className="flex justify-center mt-12">
+            <Link
+              to="/gallery"
+              className="px-8 py-3.5 bg-slate-100 hover:bg-primary-blue text-slate-800 hover:text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-all duration-300 shadow-sm flex items-center gap-2 hover:-translate-y-0.5"
+            >
+              <span>View All Projects</span>
+              <ArrowRight size={14} />
+            </Link>
           </div>
         </div>
       </section>

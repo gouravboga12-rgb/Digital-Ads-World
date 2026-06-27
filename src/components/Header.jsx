@@ -1,13 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Phone, MessageCircle, Menu, X, ArrowRight } from 'lucide-react';
-import { agencyInfo } from '../data/siteContent';
+import { agencyInfo as defaultAgencyInfo } from '../data/siteContent';
+import { siteDataManager } from '../data/siteDataManager';
 import logo from '../assets/logo.png';
 
 export default function Header() {
+  const [agencyInfo, setAgencyInfo] = useState(defaultAgencyInfo);
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    let active = true;
+    async function loadData() {
+      try {
+        const info = await siteDataManager.getAgencyInfo();
+        if (active && info) {
+          setAgencyInfo(info);
+        }
+      } catch (e) {
+        console.error("Error loading header agencyInfo:", e);
+      }
+    }
+    loadData();
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {

@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 const authMiddleware = require('../middleware/auth');
 require('dotenv').config();
 
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin12345';
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'suraxasteelsafemarketing@gmail.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Digitaladsworld@#12345';
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkeychangeinproduction';
 
 // @route   POST api/auth/login

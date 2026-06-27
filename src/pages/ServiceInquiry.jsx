@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { services, agencyInfo } from '../data/siteContent';
+import { services as defaultServices, agencyInfo as defaultAgencyInfo } from '../data/siteContent';
+import { siteDataManager } from '../data/siteDataManager';
 import * as LucideIcons from 'lucide-react';
 import { 
   ArrowLeft, CheckCircle2, MessageCircle, Send, 
   HelpCircle, Clock, ShieldCheck, PhoneCall,
-  Mail, UserPlus, Shield, Instagram, Laptop, Code, Sparkles, BarChart3, Award
+  Mail, UserPlus, Shield, Instagram, Laptop, Code, Sparkles, BarChart3, Award,
+  Upload, X, FileText
 } from 'lucide-react';
 
 const defaultFormFields = [
@@ -17,16 +19,46 @@ export default function ServiceInquiry() {
   const { slug } = useParams();
   const navigate = useNavigate();
   
+  const [services, setServices] = useState(defaultServices);
+  const [agencyInfo, setAgencyInfo] = useState(defaultAgencyInfo);
+
+  const [formFields, setFormFields] = useState(defaultFormFields);
+
+  useEffect(() => {
+    let active = true;
+    async function loadData() {
+      try {
+        const [s, info, customInquiryFields] = await Promise.all([
+          siteDataManager.getServices(),
+          siteDataManager.getAgencyInfo(),
+          siteDataManager.getServiceInquiryFields(slug)
+        ]);
+        if (active) {
+          if (s) setServices(s);
+          if (info) setAgencyInfo(info);
+          if (customInquiryFields && customInquiryFields.length > 0) {
+            setFormFields(customInquiryFields);
+          } else {
+            setFormFields(defaultFormFields);
+          }
+        }
+      } catch (e) {
+        console.error("Error loading services for inquiry:", e);
+      }
+    }
+    loadData();
+    return () => { active = false; };
+  }, [slug]);
+
   // Find the selected service
   const service = services.find(s => s.slug === slug);
-
-  const formFields = service?.formFields || defaultFormFields;
 
   // Form submission state
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', service: service ? service.title : '', message: '' });
   const [customFields, setCustomFields] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [uploadingField, setUploadingField] = useState('');
 
   // Set default form service name on route change
   useEffect(() => {
@@ -98,6 +130,13 @@ export default function ServiceInquiry() {
     }));
   };
 
+  // WhatsApp notification URL builder (Short message only)
+  const buildWhatsAppMessage = (payload) => {
+    return `🔔 *New Enquiry!*\nPlease check the admin panel.\n👤 *Name:* ${payload.name}\n📋 *Service:* ${payload.service}`;
+  };
+
+  const [whatsappUrl, setWhatsappUrl] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.phone || !formData.email) return;
@@ -120,18 +159,30 @@ export default function ServiceInquiry() {
     };
 
     try {
-      const response = await fetch('/api/leads', {
+      await siteDataManager.submitLead(payload);
+      fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      });
-      if (response.ok) {
-        setSubmitted(true);
-      } else {
-        // Fallback for visual mock verification
-        setSubmitted(true);
-      }
+      }).catch(err => console.log('Mock server offline. Offline fallback active.'));
+
+      // Build WhatsApp notification URL
+      const adminPhone = agencyInfo.whatsapp || '9381723378';
+      const waMessage = buildWhatsAppMessage(payload);
+      const waUrl = `https://wa.me/91${adminPhone}?text=${encodeURIComponent(waMessage)}`;
+      setWhatsappUrl(waUrl);
+
+      // Auto-open WhatsApp with the enquiry summary
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+
+      setSubmitted(true);
     } catch (err) {
+      // Still show success + open WhatsApp even if DB save fails
+      const adminPhone = agencyInfo.whatsapp || '9381723378';
+      const waMessage = buildWhatsAppMessage(payload);
+      const waUrl = `https://wa.me/91${adminPhone}?text=${encodeURIComponent(waMessage)}`;
+      setWhatsappUrl(waUrl);
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
       setSubmitted(true);
     } finally {
       setLoading(false);
@@ -273,28 +324,30 @@ export default function ServiceInquiry() {
                       
                       {formFields.map((field) => (
                         <div key={field.name}>
-                          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
-                            {field.label} {field.type === 'text' && <span className="text-rose-500">*</span>}
+                          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-left">
+                            {field.label} {field.required && <span className="text-rose-500">*</span>}
                           </label>
 
-                          {field.type === 'text' && (
+                          {(field.type === 'text' || field.type === 'email' || field.type === 'tel') && (
                             <input
-                              type="text"
-                              required
+                              type={field.type}
+                              required={field.required}
                               placeholder={field.placeholder || ''}
                               value={customFields[field.name] || ''}
                               onChange={(e) => handleInputChange(field.name, e.target.value)}
-                              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
+                              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm text-left"
                             />
                           )}
 
                           {field.type === 'select' && (
                             <select
+                              required={field.required}
                               value={customFields[field.name] || ''}
                               onChange={(e) => handleInputChange(field.name, e.target.value)}
-                              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
+                              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm text-left"
                             >
-                              {field.options.map((opt, oIdx) => (
+                              <option value="">{field.placeholder || 'Select option...'}</option>
+                              {field.options && field.options.map((opt, oIdx) => (
                                 <option key={oIdx} value={opt}>{opt}</option>
                               ))}
                             </select>
@@ -303,11 +356,82 @@ export default function ServiceInquiry() {
                           {field.type === 'textarea' && (
                             <textarea
                               rows="3"
+                              required={field.required}
                               placeholder={field.placeholder || ''}
                               value={customFields[field.name] || ''}
                               onChange={(e) => handleInputChange(field.name, e.target.value)}
-                              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm resize-none"
+                              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm resize-none text-left"
                             ></textarea>
+                          )}
+
+                          {field.type === 'file' && (
+                            <div className="space-y-2 text-left">
+                              {customFields[field.name] ? (
+                                <div className="flex items-center gap-2.5 p-3 bg-blue-50 border border-blue-100 rounded-xl">
+                                  <FileText className="text-primary-blue shrink-0" size={16} />
+                                  <div className="flex-grow min-w-0">
+                                    <p className="text-xs font-bold text-slate-700 truncate">Document Attachment</p>
+                                    <a
+                                      href={customFields[field.name]}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="text-[10px] text-primary-blue hover:underline font-bold block"
+                                    >
+                                      View Uploaded File
+                                    </a>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleInputChange(field.name, '')}
+                                    className="text-slate-400 hover:text-rose-600 p-1 bg-white border border-slate-200 rounded-md transition-colors"
+                                  >
+                                    <X size={12} />
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="relative">
+                                  <label className="flex flex-col items-center justify-center border border-dashed border-slate-300 rounded-xl p-4 bg-slate-50 hover:bg-slate-100/50 cursor-pointer transition-all">
+                                    <Upload size={20} className="text-slate-400 mb-1.5" />
+                                    <span className="text-xs text-slate-500 font-bold">
+                                      {uploadingField === field.name ? 'Uploading document...' : 'Upload PDF / Attachment'}
+                                    </span>
+                                    <span className="text-[9px] text-slate-400 mt-0.5">PDF, DOC, DOCX, ZIP or Images (Max 10MB)</span>
+                                    <input
+                                      type="file"
+                                      required={field.required}
+                                      accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar,image/*"
+                                      disabled={uploadingField === field.name}
+                                      onChange={async (e) => {
+                                        const file = e.target.files[0];
+                                        if (!file) return;
+                                        setUploadingField(field.name);
+                                        try {
+                                          const formData = new FormData();
+                                          formData.append('file', file);
+                                          formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'digital_preset');
+                                          const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dfyawdpk0';
+                                          const response = await fetch(
+                                            `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+                                            {
+                                              method: 'POST',
+                                              body: formData
+                                            }
+                                          );
+                                          if (!response.ok) throw new Error('Upload rejected');
+                                          const data = await response.json();
+                                          handleInputChange(field.name, data.secure_url);
+                                        } catch (err) {
+                                          alert('Failed to upload file to Cloudinary.');
+                                        } finally {
+                                          setUploadingField('');
+                                        }
+                                      }}
+                                      className="hidden"
+                                    />
+                                  </label>
+                                </div>
+                              )}
+                            </div>
                           )}
                         </div>
                       ))}
@@ -345,7 +469,7 @@ export default function ServiceInquiry() {
                         Back to Services
                       </Link>
                       <a
-                        href={`https://wa.me/91${agencyInfo.whatsapp}?text=Hi%20Digital%20Ads%20World,%20I%20just%20submitted%20a%20specification%20form%20for%20${encodeURIComponent(service.title)}.`}
+                        href={whatsappUrl || `https://wa.me/91${agencyInfo.whatsapp}?text=Hi%20Digital%20Ads%20World,%20I%20just%20submitted%20a%20specification%20form%20for%20${encodeURIComponent(service.title)}.`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full py-3 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold rounded-xl text-sm transition-colors text-center flex items-center justify-center gap-1.5"

@@ -9,6 +9,21 @@ import galleryG4 from '../assets/gallery_g4.png';
 import galleryG5 from '../assets/gallery_g5.png';
 import galleryG6 from '../assets/gallery_g6.png';
 
+// Brand logos
+import brand25 from '../assets/brand_25.png';
+import brand26 from '../assets/brand_26.png';
+import brand27 from '../assets/brand_27.png';
+import brand28 from '../assets/brand_28.png';
+import brand29 from '../assets/brand_29.png';
+import brand30 from '../assets/brand_30.png';
+import brand31 from '../assets/brand_31.png';
+import brand32 from '../assets/brand_32.png';
+import brand33 from '../assets/brand_33.png';
+import brand34 from '../assets/brand_34.png';
+import brand35 from '../assets/brand_35.png';
+import brand36 from '../assets/brand_36.png';
+import brand37 from '../assets/brand_37.png';
+
 // Initial / Mock Site Content for Digital Ads World
 export const agencyInfo = {
   name: "Digital Ads World",
@@ -412,3 +427,27 @@ export const faqs = [
     answer: "We have successful campaign models across Real Estate, E-commerce, Medical/Dental Clinics, Local Businesses, Startups, SMEs, and Corporate Organizations."
   }
 ];
+
+export const defaultBrands = [
+  { id: "b25", name: "RESET", logo: brand25 },
+  { id: "b26", name: "RK Digital Color Lab", logo: brand26 },
+  { id: "b27", name: "NSR Developers", logo: brand27 },
+  { id: "b28", name: "Kohir", logo: brand28 },
+  { id: "b29", name: "Suraxa", logo: brand29 },
+  { id: "b30", name: "Steel Safe Marketing", logo: brand30 },
+  { id: "b31", name: "Gunatit", logo: brand31 },
+  { id: "b32", name: "Bharat Safe Company", logo: brand32 },
+  { id: "b33", name: "Yogi", logo: brand33 },
+  { id: "b34", name: "Cyber Cage", logo: brand34 },
+  { id: "b35", name: "Ay Furnishing", logo: brand35 },
+  { id: "b36", name: "Ayyappa", logo: brand36 },
+  { id: "b37", name: "Luminex", logo: brand37 }
+];
+
+export const defaultJourney = [
+  { id: "j1", year: "2023", title: "The Inception", desc: "Digital Ads World was founded in Hyderabad by K Charan with a single goal: driving performance-first results." },
+  { id: "j2", year: "2024", title: "Scaling Up", desc: "G Sri Ram joined to spearhead Digital Marketing, expanding ad management capacity by 300%." },
+  { id: "j3", year: "2025", title: "Global Client Base", desc: "Serviced over 50+ clients globally, managing over $2.4 Million in cumulative ad spend." },
+  { id: "j4", year: "2026", title: "Dynamic Lead Systems", desc: "Launched automated conversation funnels integrating client databases with immediate WhatsApp routing." }
+];
+
