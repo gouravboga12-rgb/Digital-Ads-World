@@ -586,8 +586,10 @@ function DashboardSubView({ leads, setLeads, showToast }) {
                     {lead.service}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-xs max-w-xs whitespace-pre-line text-slate-500 leading-relaxed font-light">
+                <td className="px-6 py-4 text-xs max-w-[280px] w-[280px] align-top">
+                  <div className="text-slate-500 leading-relaxed font-light max-h-32 overflow-y-auto whitespace-pre-line pr-1">
                   {lead.message || 'No additional note.'}
+                  </div>
                 </td>
                 <td className="px-6 py-4">
                   <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-lg ${
@@ -4862,8 +4864,8 @@ function OrdersSubView({ leads, setLeads, showToast }) {
                         {lead.service}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="text-slate-600 text-xs max-w-xs font-light leading-relaxed space-y-1 text-left">
+                    <td className="px-6 py-4 max-w-[280px] w-[280px] align-top">
+                      <div className="text-slate-600 text-xs font-light leading-relaxed space-y-1 text-left max-h-40 overflow-y-auto pr-1">
                         {(() => {
                           if (!lead.message) return null;
                           const lines = lead.message.split('\n');
