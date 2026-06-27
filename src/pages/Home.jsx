@@ -19,19 +19,36 @@ import Lightbox from '../components/Lightbox';
 import profitableConversionsImg from '../assets/profitable_conversions.png';
 import marketingTeamImg from '../assets/marketing_team.png';
 
+// Import new brand logos
+import brand25 from '../assets/brand_25.png';
+import brand26 from '../assets/brand_26.png';
+import brand27 from '../assets/brand_27.png';
+import brand28 from '../assets/brand_28.png';
+import brand29 from '../assets/brand_29.png';
+import brand30 from '../assets/brand_30.png';
+import brand31 from '../assets/brand_31.png';
+import brand32 from '../assets/brand_32.png';
+import brand33 from '../assets/brand_33.png';
+import brand34 from '../assets/brand_34.png';
+import brand35 from '../assets/brand_35.png';
+import brand36 from '../assets/brand_36.png';
+import brand37 from '../assets/brand_37.png';
+
 // Brand logos for Trusted section
 const brandLogos = [
-  { name: "Akshaya Patra", style: "text-amber-600 font-bold" },
-  { name: "Freyr Energy", style: "text-green-600 font-extrabold" },
-  { name: "Heritage", style: "text-emerald-700 font-bold tracking-wider" },
-  { name: "Queen's NRI Hospital", style: "text-indigo-600 font-medium" },
-  { name: "Medicover Hospitals", style: "text-blue-700 font-extrabold" },
-  { name: "Star Hospitals", style: "text-red-600 font-black tracking-tight" },
-  { name: "Apollo MedSkills", style: "text-cyan-700 font-bold" },
-  { name: "Yashoda Hospitals", style: "text-orange-700 font-semibold" },
-  { name: "Globe Edge", style: "text-slate-800 font-bold" },
-  { name: "Eenadu", style: "text-red-700 font-extrabold tracking-wide" },
-  { name: "Life Spring", style: "text-pink-600 font-bold" },
+  { name: "Brand 25", logo: brand25 },
+  { name: "Brand 26", logo: brand26 },
+  { name: "Brand 27", logo: brand27 },
+  { name: "Brand 28", logo: brand28 },
+  { name: "Brand 29", logo: brand29 },
+  { name: "Brand 30", logo: brand30 },
+  { name: "Brand 31", logo: brand31 },
+  { name: "Brand 32", logo: brand32 },
+  { name: "Brand 33", logo: brand33 },
+  { name: "Brand 34", logo: brand34 },
+  { name: "Brand 35", logo: brand35 },
+  { name: "Brand 36", logo: brand36 },
+  { name: "Brand 37", logo: brand37 },
 ];
 
 // Interactive Process flows
@@ -185,15 +202,12 @@ export default function Home() {
                   <span>Get Free Consultation</span>
                   <ArrowRight size={18} />
                 </a>
-                <a
-                  href={`https://wa.me/91${agencyInfo.whatsapp}?text=Hi%20Digital%20Ads%20World,%20I'm%20interested%20in%20scaling%20my%20business.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white hover:bg-slate-50 text-[#25D366] border border-[#25D366]/40 font-bold px-8 py-4 rounded-2xl flex items-center justify-center gap-2 transition-all duration-300 text-base shadow-sm"
+                <Link
+                  to="/services"
+                  className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 font-bold px-8 py-4 rounded-2xl flex items-center justify-center gap-2 transition-all duration-300 text-base shadow-sm hover:shadow"
                 >
-                  <MessageCircle size={18} />
-                  <span>WhatsApp Us</span>
-                </a>
+                  <span>View All Services</span>
+                </Link>
               </div>
 
               {/* Partner Badges */}
@@ -209,8 +223,8 @@ export default function Home() {
                   <CheckCircle size={12} className="text-green-500 fill-green-500 stroke-white" />
                 </div>
                 <div className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-2xl border border-slate-100 shadow-sm">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 fill-blue-600 shrink-0">
-                    <path d="M16.5 6c-1.8 0-3.4 1.1-4.2 2.7-.8-1.6-2.4-2.7-4.2-2.7-2.8 0-5 2.2-5 5s2.2 5 5 5c1.8 0 3.4-1.1 4.2-2.7.8 1.6 2.4 2.7 4.2 2.7 2.8 0 5-2.2 5-5s-2.2-5-5-5zm0 8.2c-1.3 0-2.5-.8-3.1-2 .6-1.2 1.8-2 3.1-2 1.8 0 3.2 1.4 3.2 3.2s-1.4 3.2-3.2 3.2zm-9 0c-1.8 0-3.2-1.4-3.2-3.2s1.4-3.2 3.2-3.2 3.1.8 3.1 2c-.6 1.2-1.8 2-3.1 2z" />
+                  <svg viewBox="0 0 16 16" fill="currentColor" className="w-5 h-5 text-[#0668E1] shrink-0">
+                    <path fillRule="evenodd" d="M8.217 5.243C9.145 3.988 10.171 3 11.483 3 13.96 3 16 6.153 16.001 9.907c0 2.29-.986 3.725-2.757 3.725-1.543 0-2.395-.866-3.924-3.424l-.667-1.123-.118-.197a55 55 0 0 0-.53-.877l-1.178 2.08c-1.673 2.925-2.615 3.541-3.923 3.541C1.086 13.632 0 12.217 0 9.973 0 6.388 1.995 3 4.598 3q.477-.001.924.122c.31.086.611.22.913.407.577.359 1.154.915 1.782 1.714m1.516 2.224q-.378-.615-.727-1.133L9 6.326c.845-1.305 1.543-1.954 2.372-1.954 1.723 0 3.102 2.537 3.102 5.653 0 1.188-.39 1.877-1.195 1.877-.773 0-1.142-.51-2.61-2.87zM4.846 4.756c.725.1 1.385.634 2.34 2.001A212 212 0 0 0 5.551 9.3c-1.357 2.126-1.826 2.603-2.581 2.603-.777 0-1.24-.682-1.24-1.9 0-2.602 1.298-5.264 2.846-5.264q.137 0 .27.018"/>
                   </svg>
                   <span className="text-xs font-bold text-slate-600">Meta Partner</span>
                   <CheckCircle size={12} className="text-green-500 fill-green-500 stroke-white" />
@@ -382,12 +396,16 @@ export default function Home() {
             {brandLogos.map((brand, i) => (
               <div 
                 key={i} 
-                className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center justify-center text-center h-20 hover:shadow-md transition-shadow"
+                className="bg-white rounded-2xl p-3 border border-slate-100 shadow-sm flex items-center justify-center text-center h-28 hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden"
               >
-                <span className={`text-sm sm:text-base ${brand.style}`}>{brand.name}</span>
+                <img 
+                  src={brand.logo} 
+                  alt={brand.name} 
+                  className="max-h-full max-w-full object-contain"
+                />
               </div>
             ))}
-            <div className="bg-blue-50 border border-blue-100/50 rounded-2xl p-5 shadow-sm flex items-center justify-center text-center h-20">
+            <div className="bg-blue-50 border border-blue-100/50 rounded-2xl p-3 shadow-sm flex items-center justify-center text-center h-28 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
               <span className="text-xs sm:text-sm text-primary-blue font-bold uppercase tracking-wider">50+ More Brands</span>
             </div>
           </div>
@@ -803,9 +821,9 @@ export default function Home() {
                 </svg>
               </div>
               <div>
-                <h4 className="text-md font-bold text-premium-black">Google Reviews</h4>
+                <h4 className="text-md font-bold text-premium-black font-heading">Google Reviews</h4>
                 <div className="flex items-center gap-1 mt-0.5">
-                  <span className="text-lg font-black text-slate-800">4.9</span>
+                  <span className="text-lg font-black text-slate-800 font-heading">4.9</span>
                   <div className="flex text-amber-400">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} size={14} fill="currentColor" className="stroke-none" />
@@ -818,16 +836,28 @@ export default function Home() {
             
             <div className="h-px w-full md:w-px md:h-12 bg-slate-100"></div>
 
-            <div className="text-center md:text-left">
-              <h4 className="text-2xl font-black text-slate-800">750+</h4>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mt-0.5">Verified Reviews</p>
+            <div className="text-center md:text-left flex flex-col justify-center">
+              <div className="flex items-baseline justify-center md:justify-start gap-1">
+                <span className="text-2xl font-black text-slate-800 font-heading">750+</span>
+                <span className="text-sm font-medium text-slate-500">Reviews</span>
+              </div>
+              <p className="text-xs font-bold text-orange-500 mt-1 uppercase tracking-wide">
+                #1 Most Reviewed Digital Agency in Hyderabad
+              </p>
             </div>
             
             <div className="h-px w-full md:w-px md:h-12 bg-slate-100"></div>
 
-            <div className="bg-amber-50 text-amber-800 border border-amber-100/50 rounded-2xl px-5 py-2.5 text-xs font-bold flex items-center gap-2">
-              <Award size={16} />
-              <span>#1 MOST REVIEWED AGENCY</span>
+            <div>
+              <a 
+                href="https://share.google/MwvC23EQriS21UwL7"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-50 text-primary-blue hover:bg-primary-blue hover:text-white rounded-2xl px-6 py-3 text-sm font-bold flex items-center gap-2 transition-all duration-300 shadow-sm hover:shadow"
+              >
+                <span>Read All Reviews</span>
+                <ArrowRight size={16} />
+              </a>
             </div>
           </div>
 
@@ -872,6 +902,41 @@ export default function Home() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Bottom Google Reviews Summary and Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-6 mt-12">
+            <a 
+              href="https://share.google/MwvC23EQriS21UwL7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white border border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-800 rounded-2xl px-6 py-3 text-sm font-bold flex items-center gap-2.5 transition-all duration-300 shadow-sm hover:shadow"
+            >
+              <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+              </svg>
+              <span>View All 750+ Google Reviews</span>
+            </a>
+
+            <a 
+              href="https://share.google/MwvC23EQriS21UwL7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-amber-500 hover:bg-amber-600 text-white rounded-2xl px-6 py-3 text-sm font-bold flex items-center gap-2 transition-all duration-300 shadow-sm hover:shadow"
+            >
+              <Star size={16} fill="currentColor" className="stroke-none" />
+              <span>Leave a review</span>
+            </a>
+
+            <div className="flex items-center gap-2 text-slate-500 text-xs font-medium">
+              <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
+              <span>
+                Reviews sourced from Google My Business <span className="text-slate-300 font-light mx-1">—</span> verified & authentic
+              </span>
+            </div>
           </div>
         </div>
       </section>
