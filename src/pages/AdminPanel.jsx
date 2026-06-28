@@ -1658,6 +1658,22 @@ function HomeEditSubView({ agencyInfo, setAgencyInfo, testimonials, setTestimoni
                   />
                 </div>
                 <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Google Site Verification Code (Search Console)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. google1234567890abcdef"
+                    value={agencyInfo.seo?.googleSiteVerification || ''}
+                    onChange={(e) => setAgencyInfo({
+                      ...agencyInfo,
+                      seo: { ...agencyInfo.seo, googleSiteVerification: e.target.value }
+                    })}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-700"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">SEO Description</label>
                   <textarea
                     rows="2"
@@ -1666,6 +1682,19 @@ function HomeEditSubView({ agencyInfo, setAgencyInfo, testimonials, setTestimoni
                     onChange={(e) => setAgencyInfo({
                       ...agencyInfo,
                       seo: { ...agencyInfo.seo, description: e.target.value }
+                    })}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-700 resize-none"
+                  ></textarea>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Keywords (Comma separated)</label>
+                  <textarea
+                    rows="2"
+                    placeholder="e.g. Google Ads, Meta Ads, Performance Marketing"
+                    value={Array.isArray(agencyInfo.seo?.keywords) ? agencyInfo.seo.keywords.join(', ') : agencyInfo.seo?.keywords || ''}
+                    onChange={(e) => setAgencyInfo({
+                      ...agencyInfo,
+                      seo: { ...agencyInfo.seo, keywords: e.target.value.split(',').map(k => k.trim()) }
                     })}
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue text-xs font-semibold text-slate-700 resize-none"
                   ></textarea>
