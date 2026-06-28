@@ -1183,15 +1183,33 @@ export default function Home() {
 
       {/* GOOGLE MAPS LOCATION INTEGRATION */}
       <section className="w-full h-[450px] bg-slate-100 border-t border-slate-200">
-        <iframe
-          src={agencyInfo.googleMapsEmbedUrl}
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          allowFullScreen=""
-          loading="lazy"
-          title="Digital Ads World Office Location Map"
-        ></iframe>
+        {(() => {
+          const rawUrl = agencyInfo.googleMapsEmbedUrl || '';
+          const isValidEmbed = rawUrl && rawUrl.includes('/maps/embed');
+          if (!isValidEmbed) {
+            return (
+              <div className="w-full h-full flex flex-col items-center justify-center bg-slate-50 gap-4">
+                <div className="text-center px-6">
+                  <div className="text-4xl mb-3">📍</div>
+                  <p className="font-bold text-slate-600 text-sm">Office Location</p>
+                  <p className="text-xs text-slate-400 mt-1">Hyderabad, Telangana, India</p>
+                </div>
+              </div>
+            );
+          }
+          return (
+            <iframe
+              src={rawUrl}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              title="Digital Ads World Office Location Map"
+            ></iframe>
+          );
+        })()}
       </section>
 
       {/* WHATSAPP CTA BANNER */}
