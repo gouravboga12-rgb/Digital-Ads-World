@@ -1100,7 +1100,7 @@ export default function Home() {
                   <form onSubmit={handleFormSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Your Name</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Your Name <span className="text-rose-500">*</span></label>
                         <input
                           type="text"
                           required
@@ -1111,7 +1111,7 @@ export default function Home() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Phone Number</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Phone Number <span className="text-rose-500">*</span></label>
                         <input
                           type="tel"
                           required
@@ -1125,9 +1125,10 @@ export default function Home() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Email Address</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Email Address <span className="text-rose-500">*</span></label>
                         <input
                           type="email"
+                          required
                           placeholder="e.g. john@company.com"
                           value={leadForm.email}
                           onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })}
