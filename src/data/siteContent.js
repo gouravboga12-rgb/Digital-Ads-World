@@ -32,8 +32,8 @@ export const agencyInfo = {
   whatsapp: "9381723378",
   email: "digitaladsworld.co@gmail.com",
   address: "H.NO.11-13-524/2 Yadav Nagar Colony, Road No. 3, SRK Puram, Saroornagar, Hyderabad, Telangana 500035",
-  googleMapsEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3808.2045610815124!2d78.55305821077755!3d17.363248100000013!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb995cbcc8a367%3A0x66e9239300fbdba!2sDigital%20Ads%20World%20%7C%20Best%20Digital%20Marketing%20Agency%20in%20Hyderabad!5e0!3m2!1sen!2sin!4v1719290000000!5m2!1sen!2sin",
-  googleMapsBusinessUrl: "https://maps.app.goo.gl/ZGYTbNCpNj7KKLuq6",
+  googleMapsEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3808.0099297536167!2d78.5556385!3d17.363255199999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb995cbcc8a367%3A0x66e9239300fbdba!2sDigital%20Ads%20World%20%7C%20Best%20Digital%20Marketing%20Agency%20in%20Hyderabad!5e0!3m2!1sen!2sin!4v1782632229342!5m2!1sen!2sin",
+  googleMapsBusinessUrl: "https://maps.app.goo.gl/yq6qEExp9De3K4Hk6",
   social: {
     linkedin: "https://linkedin.com",
     instagram: "https://www.instagram.com/digital_ads_world_?igsh=dWhseGhhbjJhejBo",
