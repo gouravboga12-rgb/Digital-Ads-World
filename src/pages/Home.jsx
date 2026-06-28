@@ -89,7 +89,8 @@ export default function Home() {
   ]);
 
   const [activeFaq, setActiveFaq] = useState(null);
-  const [leadForm, setLeadForm] = useState({ name: '', email: '', phone: '', service: 'General Growth Inquiry', message: '' });
+  const [formFields, setFormFields] = useState([]);
+  const [formData, setFormData] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [activeProcessTab, setActiveProcessTab] = useState('b2c');
   const [activeGalleryFilter, setActiveGalleryFilter] = useState('all');
@@ -100,7 +101,7 @@ export default function Home() {
     let active = true;
     async function loadData() {
       try {
-        const [info, s, t, test, gal, brandsData, industriesData, faqsData] = await Promise.all([
+        const [info, s, t, test, gal, brandsData, industriesData, faqsData, fields] = await Promise.all([
           siteDataManager.getAgencyInfo(),
           siteDataManager.getServices(),
           siteDataManager.getTeam(),
@@ -108,7 +109,8 @@ export default function Home() {
           siteDataManager.getGallery(),
           siteDataManager.getBrands(),
           siteDataManager.getIndustries(),
-          siteDataManager.getFaqs()
+          siteDataManager.getFaqs(),
+          siteDataManager.getContactFormFields()
         ]);
         if (active) {
           if (info) setAgencyInfo(info);
@@ -119,6 +121,20 @@ export default function Home() {
           if (brandsData) setBrandLogos(brandsData);
           if (industriesData && industriesData.length > 0) setIndustries(industriesData);
           if (faqsData && faqsData.length > 0) setFaqs(faqsData);
+          if (fields) {
+            setFormFields(fields);
+            
+            // Initialize form keys
+            const initialForm = {};
+            fields.forEach(f => {
+              if (f.type === 'select') {
+                initialForm[f.name] = f.options && f.options.length > 0 ? f.options[0] : '';
+              } else {
+                initialForm[f.name] = '';
+              }
+            });
+            setFormData(initialForm);
+          }
         }
       } catch (e) {
         console.error("Error loading home page dynamic content:", e);
@@ -183,27 +199,53 @@ export default function Home() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (!leadForm.name || !leadForm.phone) return;
+    
+    const name = formData.name || '';
+    const phone = formData.phone || '';
+    const email = formData.email || '';
+    const service = formData.service || 'General Growth Consultation';
+    
+    // Compile all other field values into message
+    let compiledMessage = '';
+    formFields.forEach(field => {
+      if (!['name', 'phone', 'email', 'service'].includes(field.name)) {
+        compiledMessage += `${field.label}: ${formData[field.name] || ''}\n`;
+      }
+    });
+
+    const payload = {
+      name,
+      email,
+      phone,
+      service,
+      message: compiledMessage
+    };
+
     try {
-      await siteDataManager.submitLead(leadForm);
+      await siteDataManager.submitLead(payload);
+      fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(err => console.log('Mock server offline. Offline fallback active.'));
+
+      // Send WhatsApp notification to agency owner
+      const waNumber = agencyInfo?.whatsapp || agencyInfo?.phone || '9381723378';
+      const waMsg = [
+        `🔔 *New Website Inquiry*`,
+        `👤 *Name:* ${name}`,
+        `📞 *Phone:* ${phone}`,
+        `📧 *Email:* ${email}`,
+        `💼 *Service:* ${service}`,
+        compiledMessage ? `📝 *Message:* ${compiledMessage.replace(/\n/g, ' | ')}` : '',
+        `🕐 *Time:* ${new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}`
+      ].filter(Boolean).join('\n');
+      window.open(`https://wa.me/91${waNumber}?text=${encodeURIComponent(waMsg)}`, '_blank');
+
+      setSubmitted(true);
     } catch (err) {
-      console.error(err);
+      setSubmitted(true);
     }
-
-    // Send WhatsApp notification to agency owner
-    const waNumber = agencyInfo?.whatsapp || agencyInfo?.phone || '9381723378';
-    const waMsg = [
-      `🔔 *New Website Inquiry*`,
-      `👤 *Name:* ${leadForm.name}`,
-      `📞 *Phone:* ${leadForm.phone}`,
-      `📧 *Email:* ${leadForm.email || 'Not provided'}`,
-      `💼 *Service:* ${leadForm.service}`,
-      leadForm.message ? `📝 *Message:* ${leadForm.message}` : '',
-      `🕐 *Time:* ${new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}`
-    ].filter(Boolean).join('\n');
-    window.open(`https://wa.me/91${waNumber}?text=${encodeURIComponent(waMsg)}`, '_blank');
-
-    setSubmitted(true);
   };
 
   return (
@@ -1099,69 +1141,44 @@ export default function Home() {
                 {!submitted ? (
                   <form onSubmit={handleFormSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Your Name <span className="text-rose-500">*</span></label>
-                        <input
-                          type="text"
-                          required
-                          placeholder="e.g. John Doe"
-                          value={leadForm.name}
-                          onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Phone Number <span className="text-rose-500">*</span></label>
-                        <input
-                          type="tel"
-                          required
-                          placeholder="e.g. 9876543210"
-                          value={leadForm.phone}
-                          onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Email Address <span className="text-rose-500">*</span></label>
-                        <input
-                          type="email"
-                          required
-                          placeholder="e.g. john@company.com"
-                          value={leadForm.email}
-                          onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Interest Channel</label>
-                        <select
-                          value={leadForm.service}
-                          onChange={(e) => setLeadForm({ ...leadForm, service: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm bg-white"
-                        >
-                          <option value="General Growth Inquiry">General Growth Inquiry</option>
-                          <option value="Google Ads">Google Ads</option>
-                          <option value="Meta Ads">Meta Ads</option>
-                          <option value="Lead Generation">Lead Generation</option>
-                          <option value="SEO">SEO</option>
-                          <option value="Social Media Marketing">Social Media Marketing</option>
-                          <option value="Website Design & Development">Website Design & Development</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Message / Goals</label>
-                      <textarea
-                        rows="3"
-                        placeholder="Tell us about your business goals and target metrics..."
-                        value={leadForm.message}
-                        onChange={(e) => setLeadForm({ ...leadForm, message: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm resize-none"
-                      ></textarea>
+                      {formFields.map(field => (
+                        <div key={field.name} className={`text-left ${field.type === 'textarea' ? 'sm:col-span-2' : ''}`}>
+                          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
+                            {field.label} {field.required && <span className="text-rose-500">*</span>}
+                          </label>
+                          
+                          {field.type === 'textarea' ? (
+                            <textarea
+                              rows="3"
+                              required={field.required}
+                              placeholder={field.placeholder}
+                              value={formData[field.name] || ''}
+                              onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+                              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm resize-none"
+                            ></textarea>
+                          ) : field.type === 'select' ? (
+                            <select
+                              required={field.required}
+                              value={formData[field.name] || ''}
+                              onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+                              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
+                            >
+                              {field.options && field.options.map((opt, i) => (
+                                <option key={i} value={opt}>{opt}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <input
+                              type={field.type || 'text'}
+                              required={field.required}
+                              placeholder={field.placeholder}
+                              value={formData[field.name] || ''}
+                              onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+                              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:outline-none focus:border-primary-blue transition-colors text-sm"
+                            />
+                          )}
+                        </div>
+                      ))}
                     </div>
 
                     <button
