@@ -286,15 +286,49 @@ export default function Contact() {
 
       {/* Google Maps Integration Section */}
       <section className="w-full h-[450px] bg-slate-100 border-t border-slate-200">
-        <iframe
-          src={agencyInfo.googleMapsEmbedUrl}
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          allowFullScreen=""
-          loading="lazy"
-          title="Digital Ads World Office Location Map"
-        ></iframe>
+        {(() => {
+          const rawUrl = agencyInfo.googleMapsEmbedUrl || '';
+          // If it's already a proper embed URL, use it directly
+          let embedUrl = rawUrl;
+          if (rawUrl && rawUrl.includes('google.com/maps') && !rawUrl.includes('/embed')) {
+            // Try to convert share URL to embed URL
+            const placeMatch = rawUrl.match(/place\/([^/]+)/);
+            const coordMatch = rawUrl.match(/@([\d.-]+),([\d.-]+)/);
+            if (coordMatch) {
+              embedUrl = `https://www.google.com/maps/embed?pb=!1m0!3m2!1sen!2sin!4v1!5m2!1sen!2sin&center=${coordMatch[1]},${coordMatch[2]}&zoom=15`;
+              // Better: use the q= embed for a place name
+              if (placeMatch) {
+                embedUrl = `https://www.google.com/maps/embed/v1/place?key=AIzaSyD-placeholder&q=${encodeURIComponent(decodeURIComponent(placeMatch[1]))}`;
+              }
+            }
+          }
+          const isValidEmbed = embedUrl && (embedUrl.includes('/maps/embed') || embedUrl.includes('maps/embed'));
+          if (!isValidEmbed) {
+            return (
+              <div className="w-full h-full flex flex-col items-center justify-center bg-slate-50 gap-4">
+                <div className="text-slate-400 text-center px-6">
+                  <div className="text-4xl mb-3">📍</div>
+                  <p className="font-bold text-slate-600 text-sm">Map not configured</p>
+                  <p className="text-xs text-slate-400 mt-1 max-w-sm">
+                    Go to Admin Panel → Contact Page Edit and paste a <strong>Google Maps Embed URL</strong> (must start with <code className="bg-slate-100 px-1 rounded">https://www.google.com/maps/embed</code>).
+                  </p>
+                </div>
+              </div>
+            );
+          }
+          return (
+            <iframe
+              src={embedUrl}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Digital Ads World Office Location Map"
+            ></iframe>
+          );
+        })()}
       </section>
 
     </div>
