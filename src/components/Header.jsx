@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Phone, MessageCircle, Menu, X, ArrowRight } from 'lucide-react';
 import { agencyInfo as defaultAgencyInfo } from '../data/siteContent';
 import { siteDataManager } from '../data/siteDataManager';
-import logo from '../assets/logo.png';
+import logo from '../assets/footer_logo.png';
 
 export default function Header() {
   const [agencyInfo, setAgencyInfo] = useState(defaultAgencyInfo);
@@ -84,7 +84,7 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo Section */}
           <Link to="/" onClick={() => handleNavigation('/')} className="flex items-center group">
-            <img src={logo} alt="Digital Ads World" className="h-16 md:h-24 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
+            <img src={logo} alt="Digital Ads World" className="h-20 md:h-28 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
           </Link>
 
           {/* Desktop Navigation Links */}
