@@ -90,6 +90,20 @@ export default function Contact() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       }).catch(err => console.log('Mock server offline. Offline fallback active.'));
+
+      // Send WhatsApp notification to agency owner
+      const waNumber = agencyInfo?.whatsapp || agencyInfo?.phone || '9381723378';
+      const waMsg = [
+        `🔔 *New Contact Inquiry*`,
+        `👤 *Name:* ${name}`,
+        `📞 *Phone:* ${phone}`,
+        `📧 *Email:* ${email}`,
+        `💼 *Service:* ${service}`,
+        compiledMessage ? `📝 *Message:* ${compiledMessage.replace(/\n/g, ' | ')}` : '',
+        `🕐 *Time:* ${new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}`
+      ].filter(Boolean).join('\n');
+      window.open(`https://wa.me/91${waNumber}?text=${encodeURIComponent(waMsg)}`, '_blank');
+
       setSubmitted(true);
     } catch (err) {
       setSubmitted(true);

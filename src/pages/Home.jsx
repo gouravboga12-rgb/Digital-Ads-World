@@ -189,6 +189,20 @@ export default function Home() {
     } catch (err) {
       console.error(err);
     }
+
+    // Send WhatsApp notification to agency owner
+    const waNumber = agencyInfo?.whatsapp || agencyInfo?.phone || '9381723378';
+    const waMsg = [
+      `🔔 *New Website Inquiry*`,
+      `👤 *Name:* ${leadForm.name}`,
+      `📞 *Phone:* ${leadForm.phone}`,
+      `📧 *Email:* ${leadForm.email || 'Not provided'}`,
+      `💼 *Service:* ${leadForm.service}`,
+      leadForm.message ? `📝 *Message:* ${leadForm.message}` : '',
+      `🕐 *Time:* ${new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}`
+    ].filter(Boolean).join('\n');
+    window.open(`https://wa.me/91${waNumber}?text=${encodeURIComponent(waMsg)}`, '_blank');
+
     setSubmitted(true);
   };
 
